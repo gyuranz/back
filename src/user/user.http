@@ -1,29 +1,25 @@
+
 ### 유저 생성
 POST http://localhost:3000/user/create
 content-type: application/json
 
 {
     "user_nickname" : "TnkYun",
-    "password" : "test1234",
+    "user_password" : "test1234"
 }
 
 ### 유저 정보 가져오기
-GET  http://localhost:3000/user/getUser/TnkYun
+GET  http://localhost:3000/user/getUser/8
 
 ### 유저 정보 업데이트
-PUT  http://localhost:3000/user/update/TnkYun
+PUT  http://localhost:3000/user/update/8
 content-type: application/json
 
 {
     "user_nickname" : "TTnkYYUN",
-    "password": "test4321"
+    "user_password": "test4321"
 }
 
-
-## ! 닉네임을 바꾸면 주소가 바뀔까???
-
 ###유저 삭제 
-DELETE http://localhost:3000/user/delete/TnkYun
+DELETE http://localhost:3000/user/delete/8
 
-###유저 삭제
-DELETE http://localhost:3000/user/delete/TTnkYYUN

@@ -4,6 +4,7 @@
 import { Body, Controller, Get, Post, Param, Put, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 
 
 
@@ -12,45 +13,43 @@ export class UserController {
     constructor(private userService: UserService) { }
 
     @Post('/create')
-    createUser(@Body() user: User) {
+    createUser(@Body() user: CreateUserDto) {
         return this.userService.createUser(user);
     }
 
-    @Get('/getUser/:user_nickname')
-    async getUser(@Param('user_nickname') user_nickname: string) {
-        const user = await this.userService.getUser(user_nickname);
-        console.log(user);
-        return user;
-    }
-
-    @Put('/update/:user_nickname')
-    updateUser(@Param('user_nickname') user_nickname: string, @Body() user: User){
-        console.log(user);
-        return this.userService.updateUser(user_nickname, user);
-    }
-
-    @Delete('/delete/:user_nickname')
-    deleteUser(@Param('user_nickname') user_nickname: string){
-        return this.userService.deleteUser(user_nickname);
- 
- 
- 
-        // @Get('/getUser/:user_id')
-    // async getUser(@Param('user_id') user_id: number) {
-    //     const user = await this.userService.getUser(user_id);
+    // @Get('/getUser/:user_nickname')
+    // async getUser(@Param('user_nickname') user_nickname: string) {
+    //     const user = await this.userService.getUser(user_nickname);
     //     console.log(user);
     //     return user;
     // }
 
-    // @Put('/update/:user_id')
-    // updateUser(@Param('user_id') user_id: number, @Body() user: User){
+    // @Put('/update/:user_nickname')
+    // updateUser(@Param('user_nickname') user_nickname: string, @Body() user: User){
     //     console.log(user);
-    //     return this.userService.updateUser(user_id, user);
+    //     return this.userService.updateUser(user_nickname, user);
     // }
 
-    // @Delete('/delete/:user_id')
-    // deleteUser(@Param('user_id') user_id: number){
-    //     return this.userService.deleteUser(user_id);
+    // @Delete('/delete/:user_nickname')
+    // deleteUser(@Param('user_nickname') user_nickname: string){
+    //     return this.userService.deleteUser(user_nickname);
+
+        @Get('/getUser/:user_id')
+    async getUser(@Param('user_id') user_id: number) {
+        const user = await this.userService.getUser(user_id);
+        console.log(user);
+        return user;
+    }
+
+    @Put('/update/:user_id')
+    updateUser(@Param('user_id') user_id: number, @Body() user: UpdateUserDto){
+        console.log(user);
+        return this.userService.updateUser(user_id, user);
+    }
+
+    @Delete('/delete/:user_id')
+    deleteUser(@Param('user_id') user_id: number){
+        return this.userService.deleteUser(user_id);
     }
 }
 

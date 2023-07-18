@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -18,5 +18,5 @@ export class User {
     // user_room: {room_id : chat_summary, ... }
 
     @Column({ default: true })
-    createDt: Date = new Date();
+    createUser_Dt: Date = new Date();
 }
