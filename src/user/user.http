@@ -9,10 +9,10 @@ content-type: application/json
 }
 
 ### 유저 정보 가져오기
-GET  http://localhost:3000/user/getUser/8
+GET  http://localhost:3000/user/getUser/9
 
 ### 유저 정보 업데이트
-PUT  http://localhost:3000/user/update/8
+PUT  http://localhost:3000/user/update/9
 content-type: application/json
 
 {
@@ -21,5 +21,7 @@ content-type: application/json
 }
 
 ###유저 삭제 
-DELETE http://localhost:3000/user/delete/8
+DELETE http://localhost:3000/user/delete/9
+
+###! 잘못된 이메일을 보내는 결과는 우리 상황상 이메일 검증이 없어 삭제되었음.
 
