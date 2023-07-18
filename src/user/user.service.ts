@@ -19,32 +19,8 @@ export class UserService {
         return this.userRepository.save(user);
     }
 
-    // // 유저 정보 찾기
-    // async getUser(user_nickname: string) {
-    //     const result = await this.userRepository.findOne({
-    //         where: { user_nickname },
-    //     });
-    //     return result;
-    // }
-
-    // // 유저 정보 업데이트
-    // async updateUser(user_nickname, _user) {
-    //     const user: User = await this.getUser(user_nickname);
-    //     console.log(_user);
-    //     user.user_nickname = _user.user_nickname;
-    //     user.user_password = _user.user_password;
-    //     console.log(user);
-    //     this.userRepository.save(user);
-    // }
-
-    // //유저 삭제 
-    // deleteUser(user_nickname: string) {
-    //     return this.userRepository.delete({ user_nickname })
-    // }
-
-
-    // 유저 정보 찾기
-    async getUser(user_id:number){
+    // 유저 정보를 ID로 찾기
+    async getUserbyId(user_id:number){
         const result = await this.userRepository.findOne({
             where:{user_id},
         });
@@ -53,7 +29,7 @@ export class UserService {
 
     // 유저 정보 업데이트
     async updateUser(user_id, _user){
-        const user:User = await this.getUser(user_id);
+        const user:User = await this.getUserbyId(user_id);
         console.log(_user);
         user.user_nickname = _user.user_nickname;
         user.user_password = _user.user_password;
@@ -65,5 +41,28 @@ export class UserService {
     deleteUser(user_id:number){
         return this.userRepository.delete({user_id})
     }
+
+    // 유저 정보를 닉네임 기반으로 찾기
+    async getUserbyNickname(user_nickname: string) {
+        const result = await this.userRepository.findOne({
+            where: { user_nickname },
+        });
+        return result;
+    }
+    // // 닉네임 기반 유저 정보 업데이트
+    // async updateUser(user_nickname, _user) {
+    //     const user: User = await this.getUser(user_nickname);
+    //     console.log(_user);
+    //     user.user_nickname = _user.user_nickname;
+    //     user.user_password = _user.user_password;
+    //     console.log(user);
+    //     this.userRepository.save(user);
+    // }
+
+    // // 닉네임 기반 유저 삭제 
+    // deleteUser(user_nickname: string) {
+    //     return this.userRepository.delete({ user_nickname })
+    // }
+
 
 }

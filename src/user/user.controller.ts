@@ -35,8 +35,8 @@ export class UserController {
     //     return this.userService.deleteUser(user_nickname);
 
         @Get('/getUser/:user_id')
-    async getUser(@Param('user_id') user_id: number) {
-        const user = await this.userService.getUser(user_id);
+    async getUserbyId(@Param('user_id') user_id: number) {
+        const user = await this.userService.getUserbyId(user_id);
         console.log(user);
         return user;
     }
