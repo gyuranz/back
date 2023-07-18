@@ -14,7 +14,7 @@ POST http://localhost:3000/auth/register
 content-type: application/json
 
 {
-    "user_nickname" : "kdjy2238",
+    "user_nickname" : "kdjytva2238",
     "user_password" : "a1234567"
 }
 
@@ -35,3 +35,16 @@ content-type: application/json
     "user_nickname" : "kdjy2238",
     "user_password" : "a1234567"
 }
+
+
+### 쿠키 재발급+로그인
+POST http://localhost:3000/auth/login2
+content-type: application/json
+
+{
+    "user_nickname" : "kdjytva2238",
+    "user_password" : "a1234567"
+}
+
+### GUARD 테스트
+GET http://localhost:3000/auth/test-guard

@@ -41,12 +41,12 @@ export class AuthService {
     async validateUser(user_nickname: string, user_password: string){
         //닉네임을 통해 유저 정보 가져옴
         const user = await this.userService.getUserbyNickname(user_nickname); 
-        
+
         //해당 유저가 없으면 검증 실패
         if(!user) {
             return null;
         }
-        
+
         //user에 있는 정보를 불러와 패스워드를 hashedPassword라는 변수에, 나머지를 userInfo 개체에 할당한다.
         const {user_password: hashedPassword, ...userInfo} = user;
         

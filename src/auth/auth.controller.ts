@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Request, Response } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, Response, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/user.dto';
+import { LoginGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,9 +29,35 @@ export class AuthController {
             //쿠키 정보를 Response에 저장
             res.cookie('login', JSON.stringify(userInfo), {
                 httpOnly: false,        //브라우저에서 읽을 수 있도록 함
-                maxAge: 1000 * 60 * 60 * 24 * 7,    //쿠키가 7일(ms단위, 1000ms * 60초 * 60분 *24시간 *7일)동안 유지되도록 함
+                maxAge: 1000 * 10,   //! 추후 수정, 로그인 테스트용
+                // maxAge: 1000 * 60 * 60 * 24 * 7,    //쿠키가 7일(ms단위, 1000ms * 60초 * 60분 *24시간 *7일)동안 유지되도록 함
             });
         }
-        return res.send({message:'login success'})
+        return res.send({ message: 'login success' })
+    }
+
+    //? 쿠키를 가지고 있지 않거나, 로그인 중 사라진 경우 login2를, 
+    //? 쿠키를 정상적으로 가지고 있는 경우 testGuards를 사용하는 것으로 추정
+
+    @UseGuards(LoginGuard) //auth.guard.ts에 만든 로그인가드 사용
+    @Post('login2')
+    async login2(@Request() req, @Response() res) {
+
+        //쿠키는 없고(기존 로그인하지 않았지만, request에 user정보가 있으면 응답값에 쿠키 정보 추가)
+        if (!req.cookies['login'] && req.user) {
+            // 응답에 쿠키 정보 추가
+            res.cookie('login', JSON.stringify(req.user), {
+                httpOnly: true,
+                maxAge: 1000 * 10,   //! 추후 수정, 로그인 테스트용
+                //maxAge: 1000 * 60 * 60 * 24 * 7
+            });
+        }
+        return res.send({ message: 'login2 success' });
+    }
+
+    @UseGuards(LoginGuard)
+    @Get('test-guard')
+    testGuard() {
+        return '이미 로그인된 때만 이 메시지가 보입니다.'
     }
 }
