@@ -4,8 +4,8 @@ POST http://localhost:3000/auth/register
 content-type: application/json
 
 {
-    "user_nickname" : "kdy2238",
-    "user_password" : "a1234567"
+    "user_nickname" : "john",
+    "user_password" : "changeme"
 }
 
 ### 두번째아이디 회원가입
@@ -23,8 +23,8 @@ POST http://localhost:3000/auth/login
 content-type: application/json
 
 {
-    "user_nickname" : "kdy2238",
-    "user_password" : "a1234567"
+    "user_nickname" : "john",
+    "user_password" : "changeme"
 }
 
 ### 두번째아이디 로그인
@@ -47,4 +47,5 @@ content-type: application/json
 }
 
 ### GUARD 테스트
-GET http://localhost:3000/auth/test-guard
+curl http://localhost:3000/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiam9obiIsImlhdCI6MTY4OTgwMTE1MSwiZXhwIjoxNjg5ODAxMjExfQ.L1urz51YZe_3TfeRoH0kXKygYuQ3wb1VQKW4l0W5Beg"
+{"sub":1,"username":"kdy2238","iat":...,"exp":...}

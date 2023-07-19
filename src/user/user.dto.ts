@@ -30,6 +30,17 @@ export class UpdateUserDto{
     user_password:string;
 }
 
+export class LoginDto{
+    @IsString()
+    // @Min(2)
+    // @Max(20)
+    user_nickname:string;
+
+    @IsString()
+    // @Min(6)
+    // @Max(20)
+    user_password:string;
+}
 
 //! 389~390 쪽~♥ 에 validator 데코레이터 설명 있음
 //! user:string 은 ts에서 컴파일 타임 유형 검사를 위해 사용하는 정적 유형 주석일 뿐 런타임 유효성 검사를 제공하지는 않는다.
