@@ -16,7 +16,8 @@ import { jwtConstants } from './constants';
       global: true,
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
-    })
+    }) 
+    
   ],    //user모듈에서 추출한 UserService 가져옴
   providers: [AuthService],
   controllers: [AuthController],

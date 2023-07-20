@@ -8,6 +8,12 @@ export class CreateUserDto{
     @IsString()
     // @Min(2)
     // @Max(20)
+    user_id:string;
+    
+    // 문자열인지, string의 값이 2~20 사이인지 체크한다.
+    @IsString()
+    // @Min(2)
+    // @Max(20)
     user_nickname:string;
 
     // 문자열인지, string의 값이 6~20 사이인지 체크한다.
@@ -15,10 +21,18 @@ export class CreateUserDto{
     // @Min(6)
     // @Max(20)
     user_password:string;
+
+    
 }
 
 // 유저 패스워드와 닉네임 필드를 만들고 데코레이터 붙이기, 회원정보 수정 시 유효성검사
 export class UpdateUserDto{
+
+    @IsString()
+    // @Min(2)
+    // @Max(20)
+    user_id:string;
+
     @IsString()
     // @Min(2)
     // @Max(20)
@@ -31,6 +45,11 @@ export class UpdateUserDto{
 }
 
 export class LoginDto{
+    @IsString()
+    // @Min(2)
+    // @Max(20)
+    user_id:string;
+
     @IsString()
     // @Min(2)
     // @Max(20)

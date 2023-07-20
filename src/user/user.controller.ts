@@ -34,21 +34,21 @@ export class UserController {
     // deleteUser(@Param('user_nickname') user_nickname: string){
     //     return this.userService.deleteUser(user_nickname);
 
-        @Get('/getUser/:user_id')
-    async getUserbyId(@Param('user_id') user_id: number) {
+    @Get('/getUser/:user_id')
+    async getUserbyId(@Param('user_id') user_id: string) {
         const user = await this.userService.getUserbyId(user_id);
         console.log(user);
         return user;
     }
 
     @Put('/update/:user_id')
-    updateUser(@Param('user_id') user_id: number, @Body() user: UpdateUserDto){
+    updateUser(@Param('user_id') user_id: string, @Body() user: UpdateUserDto) {
         console.log(user);
         return this.userService.updateUser(user_id, user);
     }
 
     @Delete('/delete/:user_id')
-    deleteUser(@Param('user_id') user_id: number){
+    deleteUser(@Param('user_id') user_id: string) {
         return this.userService.deleteUser(user_id);
     }
 }

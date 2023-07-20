@@ -4,7 +4,8 @@ POST http://localhost:3000/auth/register
 content-type: application/json
 
 {
-    "user_nickname" : "john",
+    "user_id": "john1234",
+    "user_nickname" : "john2",
     "user_password" : "changeme"
 }
 
@@ -14,7 +15,8 @@ POST http://localhost:3000/auth/register
 content-type: application/json
 
 {
-    "user_nickname" : "kdjytva2238",
+    "user_id": "2",
+    "user_nickname" : "kdjytva22s38",
     "user_password" : "a1234567"
 }
 
@@ -23,7 +25,8 @@ POST http://localhost:3000/auth/login
 content-type: application/json
 
 {
-    "user_nickname" : "john",
+    "user_id": "john1234",
+    "user_nickname" : "john2",
     "user_password" : "changeme"
 }
 
@@ -37,15 +40,6 @@ content-type: application/json
 }
 
 
-### 쿠키 재발급+로그인
-POST http://localhost:3000/auth/login2
-content-type: application/json
-
-{
-    "user_nickname" : "kdjytva2238",
-    "user_password" : "a1234567"
-}
-
 ### GUARD 테스트
-curl http://localhost:3000/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiam9obiIsImlhdCI6MTY4OTgwMTE1MSwiZXhwIjoxNjg5ODAxMjExfQ.L1urz51YZe_3TfeRoH0kXKygYuQ3wb1VQKW4l0W5Beg"
+curl http://localhost:3000/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVVc2VyX0R0IjoxLCJ1c2VyX2NvZGUiOjEsInVzZXJfaWQiOiJqb2huMTIzNCIsInVzZXJfbmlja25hbWUiOiJqb2huMiIsImlhdCI6MTY4OTg4MDAzOSwiZXhwIjoxNjg5ODgwMDk5fQ.QcLXL60XGS_ENQSeEU1d6jNU4rkOygzncqB9O7cjiRs"
 {"sub":1,"username":"kdy2238","iat":...,"exp":...}

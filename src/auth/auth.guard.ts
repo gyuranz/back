@@ -13,7 +13,7 @@ export class LoginGuard implements CanActivate {
 
         //컨텍스트는 Request나 Response 객체를 얻어오는데에 사용. 현재 Request를 가져옴
         const request = context.switchToHttp().getRequest();
-        console.log(request.headers);
+
         const token = this.extractTokenFromHeader(request);
 
         // 쿠키가 있으면 인증 되었음

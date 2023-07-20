@@ -8,44 +8,55 @@ import { JwtService } from '@nestjs/jwt';
 export class AuthService {
 
     constructor(private userService: UserService,
-        private jwtService:JwtService) { }
+        private jwtService: JwtService) { }
 
     //회원가입
     async register(userDto: CreateUserDto) {
-        const user = await this.userService.getUserbyNickname(userDto.user_nickname);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
-        if (user) {
+        const userIdValidate = await this.userService.getUserbyNickname(userDto.user_nickname);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
+        if (userIdValidate) {
             throw new HttpException(
-                '해당 닉네임이 이미 존재합니다.',
+                '해당 아이디가 이미 존재합니다.',
                 HttpStatus.BAD_REQUEST,
             );
         }
-
+        const usernick_validate = await this.userService.getUserbyNickname(userDto.user_nickname);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
+        if (usernick_validate) {
+            throw new HttpException(
+                '해당 닉네임이 이미 존재합니다.',
+                422,
+            );
+        }
+        const hashedPw = bcrypt.hashSync(userDto.user_password, 6);
         try {
             const user = await this.userService.createUser({
                 ...userDto,
-                user_password: userDto.user_password,
+                user_password: hashedPw,
             });
             user.user_password = undefined;
             return user;
         }
         catch (error) {
-            throw new HttpException('서버 에러', 500);
+            throw new HttpException('회원가입에 실패했습니다. 다시 시도하세요', 500);
         }
     }
 
     //로그인 시 닉네임, 비밀번호 검증 로직
-    async validateUser(user_nickname: string, user_password: string){
+    async validateUser(user_nickname: string, input_user_password: string) {
         //닉네임을 통해 유저 정보 가져옴
-        const user = await this.userService.getUserbyNickname(user_nickname); 
+        const user = await this.userService.getUserbyNickname(user_nickname);
+        if(!user){
+            throw new HttpException('회원정보가 없습니다.', 422)
+        }
+        const {user_password: hashedPw, ... payload} = user;
 
         //비밀번호가 다르면
-        if(user.user_password !== user_password) {
+        if (!bcrypt.compareSync(input_user_password, hashedPw)) {
             throw new UnauthorizedException('비밀번호가 틀립니다');
         }
 
-        const payload = { sub: user.user_id, username: user.user_nickname };
+        // const payload = { sub: user.user_id, username: user.user_nickname };
         return {
-          access_token: await this.jwtService.signAsync(payload),
+            access_token: await this.jwtService.signAsync(payload),
         };
     }
 }
