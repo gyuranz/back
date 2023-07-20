@@ -23,7 +23,7 @@ export class AuthService {
         if (usernick_validate) {
             throw new HttpException(
                 '해당 닉네임이 이미 존재합니다.',
-                HttpStatus.BAD_REQUEST,
+                422,
             );
         }
         const hashedPw = bcrypt.hashSync(userDto.user_password, 6);
@@ -36,7 +36,7 @@ export class AuthService {
             return user;
         }
         catch (error) {
-            throw new HttpException('서버 에러', 500);
+            throw new HttpException('회원가입에 실패했습니다. 다시 시도하세요', 500);
         }
     }
 
@@ -44,8 +44,11 @@ export class AuthService {
     async validateUser(user_nickname: string, input_user_password: string) {
         //닉네임을 통해 유저 정보 가져옴
         const user = await this.userService.getUserbyNickname(user_nickname);
+        if(!user){
+            throw new HttpException('회원정보가 없습니다.', 422)
+        }
         const {user_password: hashedPw, ... payload} = user;
-        
+
         //비밀번호가 다르면
         if (!bcrypt.compareSync(input_user_password, hashedPw)) {
             throw new UnauthorizedException('비밀번호가 틀립니다');

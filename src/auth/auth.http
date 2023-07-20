@@ -41,5 +41,5 @@ content-type: application/json
 
 
 ### GUARD 테스트
-curl http://localhost:3000/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVVc2VyX0R0IjoxLCJ1c2VyX2NvZGUiOjEsInVzZXJfaWQiOiJqb2huMTIzNCIsInVzZXJfbmlja25hbWUiOiJqb2huMiIsImlhdCI6MTY4OTg1ODU1OSwiZXhwIjoxNjg5ODU4NjE5fQ.6B5U-eQ0Tn44KhReaPRdGKyn1vgD-CAhhi75qbFeHhU"
+curl http://localhost:3000/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVVc2VyX0R0IjoxLCJ1c2VyX2NvZGUiOjEsInVzZXJfaWQiOiJqb2huMTIzNCIsInVzZXJfbmlja25hbWUiOiJqb2huMiIsImlhdCI6MTY4OTg4MDAzOSwiZXhwIjoxNjg5ODgwMDk5fQ.QcLXL60XGS_ENQSeEU1d6jNU4rkOygzncqB9O7cjiRs"
 {"sub":1,"username":"kdy2238","iat":...,"exp":...}

@@ -44,6 +44,7 @@ export class UserService {
 
     // 유저 정보를 닉네임 기반으로 찾기
     async getUserbyNickname(user_nickname: string) {
+        console.log("3333");
         const result = await this.userRepository.findOne({
             where: { user_nickname },
         });
