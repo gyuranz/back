@@ -41,13 +41,13 @@ export class AuthService {
     }
 
     //로그인 시 닉네임, 비밀번호 검증 로직
-    async validateUser(user_nickname: string, user_password: string) {
+    async validateUser(user_nickname: string, input_user_password: string) {
         //닉네임을 통해 유저 정보 가져옴
         const user = await this.userService.getUserbyNickname(user_nickname);
         const {user_password: hashedPw, ... payload} = user;
         
         //비밀번호가 다르면
-        if (bcrypt.compareSync(user.user_password, hashedPw)) {
+        if (!bcrypt.compareSync(input_user_password, hashedPw)) {
             throw new UnauthorizedException('비밀번호가 틀립니다');
         }
 
