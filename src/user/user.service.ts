@@ -20,7 +20,7 @@ export class UserService {
     }
 
     // 유저 정보를 ID로 찾기
-    async getUserbyId(user_id:number){
+    async getUserbyId(user_id:string){
         const result = await this.userRepository.findOne({
             where:{user_id},
         });
@@ -38,7 +38,7 @@ export class UserService {
     }
 
     //유저 삭제 
-    deleteUser(user_id:number){
+    deleteUser(user_id:string){
         return this.userRepository.delete({user_id})
     }
 
