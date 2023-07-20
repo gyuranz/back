@@ -23,4 +23,10 @@ export class User {
 
     @Column({ default: true })
     createUser_Dt: Date = new Date();
+    
+    @Column({ nullable: true })
+    currentRefreshToken: string;
+  
+    @Column({ type: 'datetime', nullable: true })
+    currentRefreshTokenExp: Date;
 }

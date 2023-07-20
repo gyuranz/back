@@ -7,12 +7,14 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './user.entity';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User]),
+    ConfigModule],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],       //UserService를 외부(다른 모듈)에서 사용할 수 있도록 추출
 })
-export class UserModule {}
+export class UserModule { }

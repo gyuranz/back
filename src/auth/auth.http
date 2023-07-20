@@ -41,5 +41,8 @@ content-type: application/json
 
 
 ### GUARD 테스트
-curl http://localhost:3000/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVVc2VyX0R0IjoxLCJ1c2VyX2NvZGUiOjEsInVzZXJfaWQiOiJqb2huMTIzNCIsInVzZXJfbmlja25hbWUiOiJqb2huMiIsImlhdCI6MTY4OTg1ODU1OSwiZXhwIjoxNjg5ODU4NjE5fQ.6B5U-eQ0Tn44KhReaPRdGKyn1vgD-CAhhi75qbFeHhU"
-{"sub":1,"username":"kdy2238","iat":...,"exp":...}
+curl http://localhost:3000/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVVc2VyX0R0IjoxLCJ1c2VyX2NvZGUiOjEsInVzZXJfaWQiOiJqb2huMTIzNCIsInVzZXJfbmlja25hbWUiOiJqb2huMiIsImN1cnJlbnRSZWZyZXNoVG9rZW4iOiIkMmIkMTAkQUMyTTVNMmJWS2FRWFd4dDU0Tm1hdVlraWVtaWgzMmlpNDM5L2NlQUMweXRPRFpIdHd0TEMiLCJjdXJyZW50UmVmcmVzaFRva2VuRXhwIjpudWxsLCJpYXQiOjE2ODk4NzMzMjQsImV4cCI6MTY4OTg3MzM1NH0.Pmy_q5o_S7qtZmV77zB3uOWGEEloAIgIlchuQDjE0Go"
+{    "user_id": "john1234","user_nickname" : "john2","user_password" : "changeme""iat":...,"exp":...}
+
+
+### jwt 테스트

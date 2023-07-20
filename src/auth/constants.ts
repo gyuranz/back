@@ -1,3 +1,4 @@
 export const jwtConstants = {
-    secret: 'TnkYun',
+    secret: 'GRZ',
+    refresh: 'Al to Learn by GRZ'
   };

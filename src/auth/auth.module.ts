@@ -15,7 +15,7 @@ import { jwtConstants } from './constants';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '30s' },  //accessToken의 유효시간, refresh의 유효시간은 auth.service에 있음
     }) 
     
   ],    //user모듈에서 추출한 UserService 가져옴

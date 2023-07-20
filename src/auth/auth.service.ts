@@ -3,6 +3,11 @@ import { CreateUserDto } from 'src/user/user.dto';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt'    //암호 및 해싱 확인에 일반적으로 사용되는 암호화 해싱 기능
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/user/user.entity';
+import { jwtConstants } from './constants';
+import { RefreshTokenDto } from './refresh-token.dto';
+import { Payload } from './payload.interface';
+
 
 @Injectable()
 export class AuthService {
@@ -44,7 +49,7 @@ export class AuthService {
     async validateUser(user_nickname: string, input_user_password: string) {
         //닉네임을 통해 유저 정보 가져옴
         const user = await this.userService.getUserbyNickname(user_nickname);
-        const {user_password: hashedPw, ... payload} = user;
+        const hashedPw = user.user_password
         
         //비밀번호가 다르면
         if (!bcrypt.compareSync(input_user_password, hashedPw)) {
@@ -52,8 +57,50 @@ export class AuthService {
         }
 
         // const payload = { sub: user.user_id, username: user.user_nickname };
-        return {
-            access_token: await this.jwtService.signAsync(payload),
-        };
+        //! 함수로 바꾸자
+
+        return user;
     }
+
+    async publishAccessToken(user:User){
+        const {user_password: hashedPw, ... payload} = user;
+        const result= await this.jwtService.signAsync(payload);
+        console.log(result);
+        return result;
+    }
+
+    async publishRefreshToken(user:User){
+        const {user_password: hashedPw, ... payload} = user;
+        console.log(user);
+        return await this.jwtService.signAsync(
+            {user_id: payload.user_id},
+            {secret: jwtConstants.refresh, expiresIn: '3d'}
+            );
+    }
+    
+    async refresh(refreshTokenDto: RefreshTokenDto): Promise<{ accessToken: string }> {
+
+        const { refreshToken } = refreshTokenDto;
+        // Verify refresh token
+        // JWT Refresh Token 검증 로직
+        const decodedRefreshToken = this.jwtService.verify(refreshToken, { secret: jwtConstants.refresh }) as Payload;
+        
+        // Check if user exists
+
+        const userId = decodedRefreshToken.user_id;
+        console.log(decodedRefreshToken)
+        console.log(refreshToken)
+        const user = await this.userService.getUserIfRefreshTokenMatches(refreshToken, userId);
+        if (!user) {
+            throw new UnauthorizedException('Invalid user!');
+        }
+
+        
+        // Generate new access token
+        const accessToken = await this.publishAccessToken(user);
+        
+        console.log('여기까진 온다 3')
+        return {accessToken}; 
+      }
+      
 }
