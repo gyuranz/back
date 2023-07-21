@@ -8,31 +8,14 @@ import { CreateUserDto, UpdateUserDto } from './user.dto';
 
 
 
-@Controller('user')
+@Controller('users')
 export class UserController {
     constructor(private userService: UserService) { }
 
-    @Post('/create')
+    @Post('/signup')
     createUser(@Body() user: CreateUserDto) {
         return this.userService.createUser(user);
     }
-
-    // @Get('/getUser/:user_nickname')
-    // async getUser(@Param('user_nickname') user_nickname: string) {
-    //     const user = await this.userService.getUser(user_nickname);
-    //     console.log(user);
-    //     return user;
-    // }
-
-    // @Put('/update/:user_nickname')
-    // updateUser(@Param('user_nickname') user_nickname: string, @Body() user: User){
-    //     console.log(user);
-    //     return this.userService.updateUser(user_nickname, user);
-    // }
-
-    // @Delete('/delete/:user_nickname')
-    // deleteUser(@Param('user_nickname') user_nickname: string){
-    //     return this.userService.deleteUser(user_nickname);
 
     @Get('/getUser/:user_id')
     async getUserbyId(@Param('user_id') user_id: string) {
