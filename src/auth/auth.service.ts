@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
 import { User } from '../dtos&entitys/entity.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FindService } from './find.service';
 
 
 @Injectable()
@@ -12,18 +13,19 @@ export class AuthService {
 
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
-        private jwtService: JwtService) { }
+        private jwtService: JwtService,
+        private findService:FindService) { }
 
     //회원가입
     async register(userDto: CreateUserDto) {
-        const userIdValidate = await this.getUserbyId(userDto.user_id);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
+        const userIdValidate = await this.findService.getUserbyId(userDto.user_id);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
         if (userIdValidate) {
             throw new HttpException(
                 '해당 아이디가 이미 존재합니다.',
                 422,
             );
         }
-        const usernick_validate = await this.getUserbyNickname(userDto.user_nickname);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
+        const usernick_validate = await this.findService.getUserbyNickname(userDto.user_nickname);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
         if (usernick_validate) {
             throw new HttpException(
                 '해당 닉네임이 이미 존재합니다.',
@@ -52,7 +54,7 @@ export class AuthService {
     async validateUser(user_id: string, input_user_password: string) {
         //id 통해 유저 정보 가져옴
 
-        const user = await this.getUserbyId(user_id);
+        const user = await this.findService.getUserbyId(user_id);
         if (!user) {
             throw new HttpException('가입된 아이디가 없습니다.', 422)
         }
@@ -75,22 +77,6 @@ export class AuthService {
         return this.userRepository.save(user);
     }
 
-    // 유저 정보를 ID로 찾기
-    async getUserbyId(user_id: string) {
-        const result = await this.userRepository.findOne({
-            where: { user_id },
-        });
-        return result;
-    }
-
-
-    // 유저 정보를 닉네임 기반으로 찾기
-    async getUserbyNickname(user_nickname: string) {
-        const result = await this.userRepository.findOne({
-            where: { user_nickname },
-        });
-        return result;
-    }
 
     //유저 삭제 
     deleteUser(user_id: string) {
@@ -99,7 +85,7 @@ export class AuthService {
 
     // 유저 정보 업데이트
     async updateUser(user_id, _user) {
-        const user: User = await this.getUserbyId(user_id);
+        const user: User = await this.findService.getUserbyId(user_id);
         console.log(_user);
         user.user_nickname = _user.user_nickname;
         user.user_password = _user.user_password;

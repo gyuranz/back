@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { User } from '../dtos&entitys/entity.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FindService } from './find.service';
 
 @Module({
   imports:[
@@ -19,8 +20,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       signOptions: { expiresIn: '1d' },
     }) 
   ],
-  providers: [AuthService],
+  providers: [AuthService,FindService],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService,FindService],
 })
+
 export class AuthModule {}
