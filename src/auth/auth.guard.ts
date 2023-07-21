@@ -21,6 +21,7 @@ export class LoginGuard implements CanActivate {
             throw new UnauthorizedException('토큰이 없습니다');
         }
 
+        //토큰을 해석하여 user 정보 찾아서 정보 리턴
         try {
             const payload = await this.jwtService.verifyAsync(
                 token, {

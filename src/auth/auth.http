@@ -1,44 +1,44 @@
-# ###회원가입
+###회원가입
 
-# POST http://localhost:8080/auth/signup
-# content-type: application/json
+POST http://localhost:8080/auth/signup
+content-type: application/json
 
-# {
-#     "user_id": "john1234",
-#     "user_nickname" : "john2",
-#     "user_password" : "changemea"
-# }
+{
+    "user_id": "john1234",
+    "user_nickname" : "john2",
+    "user_password" : "changemea"
+}
 
-# ### 두번째아이디 회원가입
+### 두번째아이디 회원가입
 
-# POST http://localhost:8080/auth/register
-# content-type: application/json
+POST http://localhost:8080/auth/register
+content-type: application/json
 
-# {
-#     "user_id": "2",
-#     "user_nickname" : "kdjytva22s38",
-#     "user_password" : "a1234567"
-# }
+{
+    "user_id": "2",
+    "user_nickname" : "kdjytva22s38",
+    "user_password" : "a1234567"
+}
 
-# ### 로그인
-# POST http://localhost:8080/auth/login
-# content-type: application/json
+### 로그인
+POST http://localhost:8080/auth/login
+content-type: application/json
 
-# {
-#     "user_id": "john1234",
-#     "user_password" : "changemea"
-# }
+{
+    "user_id": "john1234",
+    "user_password" : "changemea"
+}
 
-# ### 두번째아이디 로그인
-# POST http://localhost:8080/auth/login
-# content-type: application/json
+### 두번째아이디 로그인
+POST http://localhost:8080/auth/login
+content-type: application/json
 
-# {
-#     "user_nickname" : "kdjy2238",
-#     "user_password" : "a1234567"
-# }
+{
+    "user_nickname" : "kdjy2238",
+    "user_password" : "a1234567"
+}
 
 
-# ### GUARD 테스트
-# curl http://localhost:8080/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVVc2VyX0R0IjoxLCJ1c2VyX2NvZGUiOjEsInVzZXJfaWQiOiJqb2huMTIzNCIsInVzZXJfbmlja25hbWUiOiJqb2huMiIsImlhdCI6MTY4OTkyNDYxNiwiZXhwIjoxNjg5OTI0Njc2fQ.e_tYWUXal5k9LXCcuyAKFGtqWdsKJm5ChiekKpSgbAM"
-# {"sub":1,"username":"kdy2238","iat":...,"exp":...}
+### GUARD 테스트
+curl http://localhost:8080/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVVc2VyX0R0IjoxLCJ1c2VyX2NvZGUiOjEsInVzZXJfaWQiOiJqb2huMTIzNCIsInVzZXJfbmlja25hbWUiOiJqb2huMiIsImlhdCI6MTY4OTkyNDYxNiwiZXhwIjoxNjg5OTI0Njc2fQ.e_tYWUXal5k9LXCcuyAKFGtqWdsKJm5ChiekKpSgbAM"
+{"sub":1,"username":"kdy2238","iat":...,"exp":...}
