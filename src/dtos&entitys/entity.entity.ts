@@ -41,5 +41,5 @@ export class Room {
     room_chat_contents: { user_code: number, user_nickname: string, message_id: string, message_text: string, message_creatAt: Date }[];
 
     @Column('simple-json', { nullable: true })
-    room_joined_user: { user_code: number, user_nickname: string }[];
+    room_joined_user: { user_code:number }[];
 }

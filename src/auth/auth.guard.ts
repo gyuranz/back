@@ -1,5 +1,4 @@
 import { CanActivate, Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { jwtConstants } from './constants';

@@ -9,7 +9,7 @@ export class FindService {
 
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(User) private roomRepository: Repository<Room>) { }
+        @InjectRepository(Room) private roomRepository: Repository<Room>) { }
 
     // 유저 정보를 ID로 찾기
     async getUserbyId(user_id: string) {

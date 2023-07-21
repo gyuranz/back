@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { User } from './dtos&entitys/entity.entity';
-import { JoinRoomDto } from './dtos&entitys/room.dto'
+import { CreateRoomDto, JoinRoomDto } from './dtos&entitys/room.dto'
 
 @Controller()
 export class AppController {
@@ -14,6 +14,11 @@ export class AppController {
 
   @Post('/:user_id/join')
   async joinNewRoom(@Body() setDto: JoinRoomDto){
-    return await this.appService.joinNewRoom(setDto.room_invite_key)
+    return await this.appService.joinNewRoom(setDto)
+  }
+
+  @Post(':/user_id/create')
+  async createNewRoom(@Body() setDto: CreateRoomDto){
+    return await this.appService.createNewRoom(setDto);
   }
 }

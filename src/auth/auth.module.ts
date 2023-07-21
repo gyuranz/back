@@ -18,7 +18,8 @@ import { FindService } from './find.service';
       global: true,
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '1d' },
-    }) 
+    }),
+    FindService
   ],
   providers: [AuthService,FindService],
   controllers: [AuthController],

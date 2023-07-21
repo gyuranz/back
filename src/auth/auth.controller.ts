@@ -8,8 +8,8 @@ export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post('signup')       // register 주소로 POST로 온 요청 처리, class-validator<CreateUserDto>를 통해 유효성 검증하고 회원정보 저장
-    async register(@Body() userDto: CreateUserDto) {
-        return await this.authService.register(userDto);
+    async signup(@Body() userDto: CreateUserDto) {
+        return await this.authService.signup(userDto);
     }
 
     @HttpCode(HttpStatus.OK)

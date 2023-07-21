@@ -17,7 +17,7 @@ export class AuthService {
         private findService:FindService) { }
 
     //회원가입
-    async register(userDto: CreateUserDto) {
+    async signup(userDto: CreateUserDto) {
         const userIdValidate = await this.findService.getUserbyId(userDto.user_id);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
         if (userIdValidate) {
             throw new HttpException(
@@ -62,7 +62,7 @@ export class AuthService {
 
         //!비밀번호가 다르면
         if (!bcrypt.compareSync(input_user_password, hashedPw)) {
-            throw new HttpException('비밀번호가 틀립니다', 422);
+            throw new HttpException('비밀번호가 틀립니다.', 422);
         }
 
         return {
