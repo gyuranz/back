@@ -1,0 +1,7 @@
+### 메인 입장, 기존 들어갔던 방 목록 조회
+GET  http://localhost:8080/:user_id
+content-type: application/json
+
+{
+    "user_id": "john1234"
+}

@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto } from 'src/auth/user.dto';
+import { CreateUserDto } from 'src/dtos&entitys/user.dto';
 import * as bcrypt from 'bcrypt'    //암호 및 해싱 확인에 일반적으로 사용되는 암호화 해싱 기능
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../dtos&entitys/entity.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 
@@ -37,15 +37,15 @@ export class AuthService {
                 user_password: hashedPw,
             });
             return {
-                userId : user.user_id,
-                userNickname : user.user_nickname,
+                userId: user.user_id,
+                userNickname: user.user_nickname,
                 token: await this.jwtService.signAsync(userDto),
             };
         }
         catch (error) {
             throw new HttpException('회원가입에 실패했습니다. 다시 시도하세요', 500);
         }
-        
+
     }
 
     //로그인 시 id, 비밀번호 검증 로직
@@ -53,59 +53,58 @@ export class AuthService {
         //id 통해 유저 정보 가져옴
 
         const user = await this.getUserbyId(user_id);
-        if(!user){
+        if (!user) {
             throw new HttpException('가입된 아이디가 없습니다.', 422)
         }
-        const {user_password: hashedPw, ... payload} = user;
+        const { user_password: hashedPw, ...payload } = user;
 
         //!비밀번호가 다르면
         if (!bcrypt.compareSync(input_user_password, hashedPw)) {
-            throw new HttpException('비밀번호가 틀립니다',422);
+            throw new HttpException('비밀번호가 틀립니다', 422);
         }
 
-
         return {
-            userId : user.user_id,
-            userNickname : user.user_nickname,
+            userId: user.user_id,
+            userNickname: user.user_nickname,
             token: await this.jwtService.signAsync(payload),
         };
     }
 
-        // 유저 생성
-        createUser(user): Promise<User> {
-            return this.userRepository.save(user);
-        }
-    
-        // 유저 정보를 ID로 찾기
-        async getUserbyId(user_id:string){
-            const result = await this.userRepository.findOne({
-                where:{user_id},
-            });
+    // 유저 생성
+    createUser(user): Promise<User> {
+        return this.userRepository.save(user);
+    }
+
+    // 유저 정보를 ID로 찾기
+    async getUserbyId(user_id: string) {
+        const result = await this.userRepository.findOne({
+            where: { user_id },
+        });
         return result;
-        }
-    
-    
-        // 유저 정보를 닉네임 기반으로 찾기
-        async getUserbyNickname(user_nickname: string) {
-            const result = await this.userRepository.findOne({
-                where: { user_nickname },
-            });
-            return result;
-        }
-    
-        //유저 삭제 
-        deleteUser(user_id:string){
-            return this.userRepository.delete({user_id})
-        }
-    
-        // 유저 정보 업데이트
-        async updateUser(user_id, _user){
-            const user:User = await this.getUserbyId(user_id);
-            console.log(_user);
-            user.user_nickname = _user.user_nickname;
-            user.user_password = _user.user_password;
-            console.log(user);
-            this.userRepository.save(user);
-        }
-    
+    }
+
+
+    // 유저 정보를 닉네임 기반으로 찾기
+    async getUserbyNickname(user_nickname: string) {
+        const result = await this.userRepository.findOne({
+            where: { user_nickname },
+        });
+        return result;
+    }
+
+    //유저 삭제 
+    deleteUser(user_id: string) {
+        return this.userRepository.delete({ user_id })
+    }
+
+    // 유저 정보 업데이트
+    async updateUser(user_id, _user) {
+        const user: User = await this.getUserbyId(user_id);
+        console.log(_user);
+        user.user_nickname = _user.user_nickname;
+        user.user_password = _user.user_password;
+        console.log(user);
+        this.userRepository.save(user);
+    }
+
 }
