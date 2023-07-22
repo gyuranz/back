@@ -7,19 +7,18 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
-import { User } from '../dtos&entitys/entity.entity';
+import { Room, User } from '../dtos&entitys/entity.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FindService } from './find.service';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User,Room]),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '1d' },
     }),
-    FindService
   ],
   providers: [AuthService,FindService],
   controllers: [AuthController],

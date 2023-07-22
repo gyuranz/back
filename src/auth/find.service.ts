@@ -27,16 +27,17 @@ export class FindService {
         return result;
     }
 
-    async getRoombyCode(room_code: string) {
-        const result = await this.roomRepository.findOne({
-            where: { room_code },
+    // 유저 정보를 닉네임 기반으로 찾기
+    async getUserbyCode(user_code: number) {
+        const result = await this.userRepository.findOne({
+            where: { user_code },
         });
         return result;
     }
 
-    async getRoombyInviteKey(room_invite_key: string) {
+    async getRoombyId(room_id: number) {
         const result = await this.roomRepository.findOne({
-            where: { room_invite_key },
+            where: { room_id },
         });
         return result;
     }

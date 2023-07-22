@@ -25,17 +25,14 @@ export class User {
 
 @Entity()
 export class Room {
-    @PrimaryGeneratedColumn("uuid")
-    room_code: string;
+    @PrimaryGeneratedColumn()
+    room_id: number;
 
     @Column()
     room_name: string;
 
     @Column()
     room_password: string;
-
-    @Column()
-    room_invite_key: string;
 
     @Column('simple-json', { nullable: true })
     room_chat_contents: { user_code: number, user_nickname: string, message_id: string, message_text: string, message_creatAt: Date }[];

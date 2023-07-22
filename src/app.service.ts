@@ -13,21 +13,31 @@ export class AppService {
     @InjectRepository(Room) private roomRepository: Repository<Room>) { }
 
 
-  //유저의 아이디를 근거로, 과거에 들어갔던 방들의 목록을 조회해서 리턴함
+  //유저의 아이디를 근거로, 유저의 정보를 비밀번호 제외하고 모두 리턴함
   async getUserInfoforMain(user_id: string) {
     const user = await this.findService.getUserbyId(user_id);
-
+    const {user_password , ...userexceptPW} = user;
     return {
-      userId: user.user_id,
-      userNickname: user.user_nickname,
-      user_joined_room: user.user_joined_room
+      userexceptPW
     };
   }
+
+
+  //유저의 아이디를 근거로, 과거에 들어갔던 방들의 목록을 조회해서 리턴함
+  async getUserInfoforJoinandCreate(user_id: string) {
+    const user = await this.findService.getUserbyId(user_id);
+    const {user_password , user_joined_room, ...userexceptPWandJoinRoom} = user;
+    return {
+      userexceptPWandJoinRoom
+    };
+  }
+
+  
 
   //방에 입장하고, 방 코드, 초대키, 방 이름 리턴
   async joinNewRoom(joinRoomDto: JoinRoomDto) {
 
-    const room = await this.findService.getRoombyInviteKey(joinRoomDto.room_invite_key);
+    const room = await this.findService.getRoombyId(joinRoomDto.room_id);
     if (!room) {
       throw new HttpException('일치하는 방이 없습니다.', 422);
     }
@@ -36,12 +46,17 @@ export class AppService {
       throw new HttpException('해당 방의 비밀번호와 일치하지 않습니다.', 422);
     }
 
-    //! if (room.room_joined_user !== )
-    //! 방에 접근 권한이 있는지 확인하고 없으면 room_joined_user에 user_code 추가
+    const user= await this.findService.getUserbyNickname(joinRoomDto.user_nickname);
+    // const user_nickname= user.user_nickname
+    // const input_room_joined_user=[user_id, user_nickname]
 
+    // if (!room.room_joined_user.findIndex(input_room_joined_user)){
+
+    // }
+    //! 방에 이전 방문 기록이 있는지 확인하고 없으면 room_joined_user에 user_code 추가
     return {
-      room_code: room.room_code,
-      room_invite_key: room.room_invite_key,
+      user_nickname: user.user_nickname,
+      room_id: room.room_id,
       room_name: room.room_name
     };
   }
@@ -67,10 +82,11 @@ export class AppService {
       console.log(hashedPw);
       console.log(room.room_password);
 
+      const roomIdFillto6= this.zerofill(room.room_id,6);
       return {
-        room_code: room.room_code,
         room_name: room.room_name,
-        room_invite_key: room.room_invite_key,
+        room_id: roomIdFillto6,
+        user_nickname: createRoomDto.user_nickname,
       }
     } catch {
       throw new HttpException('방 만들기에 실패했습니다. 다시 시도하세요', 500)
@@ -79,5 +95,10 @@ export class AppService {
 
   createRoom(room): Promise<Room> {
     return this.roomRepository.save(room);
+  }
+
+  zerofill(value:number, digits:number){
+    var result= value.toString();
+    return result.padStart(digits, '0')
   }
 }

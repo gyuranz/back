@@ -92,5 +92,4 @@ export class AuthService {
         console.log(user);
         this.userRepository.save(user);
     }
-
 }
