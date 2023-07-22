@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Room, User } from '../dtos&entitys/entity.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Room, User } from '../forms/schema.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 
 @Injectable()
 export class FindService {
 
     constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(Room) private roomRepository: Repository<Room>) { }
+        //! User.name이 의미하는게 뭘까?
+        @InjectModel(User.name) private userModel: Model<User>,
+        @InjectModel(Room.name) private roomModel: Model<Room>) { }
 
     // 유저 정보를 ID로 찾기
     async getUserbyId(user_id: string) {
-        const result = await this.userRepository.findOne({
+        const result = await this.userModel.findOne({
             where: { user_id },
         });
         return result;
@@ -21,7 +23,7 @@ export class FindService {
 
     // 유저 정보를 닉네임 기반으로 찾기
     async getUserbyNickname(user_nickname: string) {
-        const result = await this.userRepository.findOne({
+        const result = await this.userModel.findOne({
             where: { user_nickname },
         });
         return result;
@@ -29,21 +31,21 @@ export class FindService {
 
     // 유저 정보를 닉네임 기반으로 찾기
     async getUserbyCode(user_code: number) {
-        const result = await this.userRepository.findOne({
+        const result = await this.userModel.findOne({
             where: { user_code },
         });
         return result;
     }
 
     async getRoombyId(room_id: number) {
-        const result = await this.roomRepository.findOne({
+        const result = await this.roomModel.findOne({
             where: { room_id },
         });
         return result;
     }
 
     async getRoombyName(room_name: string) {
-        const result = await this.roomRepository.findOne({
+        const result = await this.roomModel.findOne({
             where: { room_name },
         });
         return result;

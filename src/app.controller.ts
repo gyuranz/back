@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { User } from './dtos&entitys/entity.entity';
-import { CreateRoomDto, JoinRoomDto } from './dtos&entitys/room.dto'
+import { User } from './forms/schema.schema';
+import { CreateRoomDto, JoinRoomDto } from './forms/room.dto'
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('/:user_id')
+  @Get('/:user_id/finished')
   async findUserInfoforMain(@Body() setDto: User){
     return await this.appService.getUserInfoforMain(setDto.user_id);
   }

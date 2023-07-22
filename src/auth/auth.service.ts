@@ -1,18 +1,18 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto } from 'src/dtos&entitys/user.dto';
+import { CreateUserDto } from 'src/forms/user.dto';
 import * as bcrypt from 'bcrypt'    //암호 및 해싱 확인에 일반적으로 사용되는 암호화 해싱 기능
 import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
-import { User } from '../dtos&entitys/entity.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../forms/schema.schema';
+import { InjectModel } from '@nestjs/mongoose';
 import { FindService } from './find.service';
+import { Model } from 'mongoose';
 
 
 @Injectable()
 export class AuthService {
 
     constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
+        @InjectModel(User.name) private userModel: Model<User>,
         private jwtService: JwtService,
         private findService:FindService) { }
 
@@ -74,22 +74,22 @@ export class AuthService {
 
     // 유저 생성
     createUser(user): Promise<User> {
-        return this.userRepository.save(user);
+        return this.userModel.create(user);
     }
 
 
-    //유저 삭제 
-    deleteUser(user_id: string) {
-        return this.userRepository.delete({ user_id })
-    }
+    // //유저 삭제 
+    // deleteUser(user_id: string) {
+    //     return this.userModel.deleteMany({ user_id })
+    // }
 
-    // 유저 정보 업데이트
-    async updateUser(user_id, _user) {
-        const user: User = await this.findService.getUserbyId(user_id);
-        console.log(_user);
-        user.user_nickname = _user.user_nickname;
-        user.user_password = _user.user_password;
-        console.log(user);
-        this.userRepository.save(user);
-    }
+//     // 유저 정보 업데이트
+//     async updateUser(user_id, _user) {
+//         const user: User = await this.findService.getUserbyId(user_id);
+//         console.log(_user);
+//         user.user_nickname = _user.user_nickname;
+//         user.user_password = _user.user_password;
+//         console.log(user);
+//         this.userModel.save(user);
+//     }
 }

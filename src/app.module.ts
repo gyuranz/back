@@ -1,24 +1,28 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Room, User } from './dtos&entitys/entity.entity';
+import { Room, RoomSchema, User, UserSchema } from './forms/schema.schema';
 import { AuthModule } from './auth/auth.module';
-import { FindService } from './auth/find.service';
-
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User,Room]),
-    TypeOrmModule.forRoot({ 
-      //! 여기 조절해서 DB 변경 가능(375pg)
-      type:'sqlite',
-      database: 'login.sqlite',
-      entities: [User],
-      synchronize: true,
-      logging: true,
+    MongooseModule.forFeature([{name: User.name, schema: UserSchema},{name: Room.name, schema: RoomSchema}]),
+    MongooseModule.forRoot('mongodb://localhost:8080',),
+    MongooseModule.forRoot('mongodb://localhost:8080',{
+      connectionName:'Room'
     }),
-    AuthModule],
+    // TypeOrmModule.forFeature([User,Room]),
+    // TypeOrmModule.forRoot({ 
+    //   //! 여기 조절해서 DB 변경 가능(375pg)
+    //   type:'mongodb',
+    //   database: 'login.sqlite',
+    //   entities: [User],
+    //   synchronize: true,
+    //   logging: true,
+    // }),
+    AuthModule,
+  MongooseModule.forRoot('mongodb://loclahost/nest')],
   controllers: [AppController],
   providers: [AppService],
 })
