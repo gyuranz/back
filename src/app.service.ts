@@ -22,6 +22,11 @@ export class AppService {
     };
   }
 
+  async permissionUsertoRoom(user_id:string,room_id:string){
+    const room= await this.findService.getUserbyId(room_id);
+    //! room_joined_user에 유저 정보가 있는지 조회하기
+    // room..find();
+  }
 
   //유저의 아이디를 근거로, 과거에 들어갔던 방들의 목록을 조회해서 리턴함
   async getUserInfoforJoinandCreate(user_id: string) {

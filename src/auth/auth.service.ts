@@ -53,7 +53,6 @@ export class AuthService {
     //로그인 시 id, 비밀번호 검증 로직
     async validateUser(user_id: string, input_user_password: string) {
         //id 통해 유저 정보 가져옴
-
         const user = await this.findService.getUserbyId(user_id);
         if (!user) {
             throw new HttpException('가입된 아이디가 없습니다.', 422)

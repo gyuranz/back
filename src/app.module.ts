@@ -8,10 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 @Module({
   imports: [
     MongooseModule.forFeature([{name: User.name, schema: UserSchema},{name: Room.name, schema: RoomSchema}]),
-    MongooseModule.forRoot('mongodb://localhost:8080',),
-    MongooseModule.forRoot('mongodb://localhost:8080',{
-      connectionName:'Room'
-    }),
+    MongooseModule.forRoot("mongodb+srv://rlaehddbs2238:rlaehddbs123@cluster0.uusqfxm.mongodb.net/?retryWrites=true&w=majority"),
     // TypeOrmModule.forFeature([User,Room]),
     // TypeOrmModule.forRoot({ 
     //   //! 여기 조절해서 DB 변경 가능(375pg)
@@ -22,7 +19,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     //   logging: true,
     // }),
     AuthModule,
-  MongooseModule.forRoot('mongodb://loclahost/nest')],
+  // MongooseModule.forRoot('mongodb://loclahost/nest')
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

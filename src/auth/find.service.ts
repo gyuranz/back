@@ -15,39 +15,29 @@ export class FindService {
 
     // 유저 정보를 ID로 찾기
     async getUserbyId(user_id: string) {
-        const result = await this.userModel.findOne({
-            where: { user_id },
-        });
+        const result = await this.userModel.findOne({ user_id });
         return result;
     }
 
     // 유저 정보를 닉네임 기반으로 찾기
     async getUserbyNickname(user_nickname: string) {
-        const result = await this.userModel.findOne({
-            where: { user_nickname },
-        });
+        const result = await this.userModel.findOne({ user_nickname });
         return result;
     }
 
     // 유저 정보를 닉네임 기반으로 찾기
     async getUserbyCode(user_code: number) {
-        const result = await this.userModel.findOne({
-            where: { user_code },
-        });
+        const result = await this.userModel.findOne({ user_code });
         return result;
     }
 
     async getRoombyId(room_id: number) {
-        const result = await this.roomModel.findOne({
-            where: { room_id },
-        });
+        const result = await this.roomModel.findOne({ room_id });
         return result;
     }
 
     async getRoombyName(room_name: string) {
-        const result = await this.roomModel.findOne({
-            where: { room_name },
-        });
+        const result = await this.roomModel.findOne({ room_name });
         return result;
     }
 }
