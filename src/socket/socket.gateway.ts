@@ -9,7 +9,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 @WebSocketGateway()
-export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 

@@ -5,6 +5,7 @@ import { Room, RoomSchema, User, UserSchema } from './forms/schema.schema';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SttModule } from './stt/stt.module';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { SttModule } from './stt/stt.module';
     //   logging: true,
     // }),
     AuthModule,
+    SocketModule,
   // MongooseModule.forRoot('mongodb://loclahost/nest')
   ],
   controllers: [AppController],
