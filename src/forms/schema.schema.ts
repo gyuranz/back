@@ -1,6 +1,7 @@
 import { HydratedDocument } from "mongoose";
 import { Prop, Schema, SchemaFactory,} from '@nestjs/mongoose';
 import { JoinRoomDto } from "./room.dto";
+import { type } from "os";
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -19,8 +20,8 @@ export class User{
     user_nickname: string;
 
     //! 어떻게 튜플orArray를 집어넣을 것인지 추후 수정
-    @Prop()
-    user_joined_room: JoinRoomDto[];
+    @Prop({type:[{room_id:String, room_name:String, summary:String}]})
+    user_joined_room: {room_id:string, room_name:string, summary:string}[];
 
     @Prop()
     createUser_Dt: Date;
@@ -38,12 +39,12 @@ export class Room{
     room_password: string;
 
     //! 어떻게 튜플orArray를 집어넣을 것인지 추후 수정
-    @Prop()
+    @Prop({type: [{ user_code: Number, user_nickname: String, message_id: String, message_text: String, message_creatAt: Date }]})
     room_chat_contents: { user_code: number, user_nickname: string, message_id: string, message_text: string, message_creatAt: Date }[];
 
     //! 어떻게 튜플orArray를 집어넣을 것인지 추후 수정
-    @Prop()
-    room_joined_user: { user_code:number }[];
+    @Prop({type:[{user_id: String, user_nickname: String}],default:[]})
+    room_joined_user: { user_id:string; user_nickname:string }[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
