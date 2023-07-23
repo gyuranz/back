@@ -1,16 +1,16 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { FindService } from './auth/find.service';
 import * as bcrypt from "bcrypt";
-import { CreateRoomDto, JoinRoomDto } from './dtos&entitys/room.dto';
-import { Room } from './dtos&entitys/entity.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { CreateRoomDto, JoinRoomDto } from './forms/room.dto';
+import { Room } from './forms/schema.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class AppService {
   constructor(
     private findService: FindService,
-    @InjectRepository(Room) private roomRepository: Repository<Room>) { }
+    @InjectModel(Room.name) private roomModel: Model<Room>) { }
 
 
   //유저의 아이디를 근거로, 유저의 정보를 비밀번호 제외하고 모두 리턴함
@@ -22,6 +22,11 @@ export class AppService {
     };
   }
 
+  async permissionUsertoRoom(user_id:string,room_id:string){
+    const room= await this.findService.getUserbyId(room_id);
+    //! room_joined_user에 유저 정보가 있는지 조회하기
+    // room..find();
+  }
 
   //유저의 아이디를 근거로, 과거에 들어갔던 방들의 목록을 조회해서 리턴함
   async getUserInfoforJoinandCreate(user_id: string) {
@@ -94,7 +99,7 @@ export class AppService {
   }
 
   createRoom(room): Promise<Room> {
-    return this.roomRepository.save(room);
+    return this.roomModel.create(room);
   }
 
   zerofill(value:number, digits:number){

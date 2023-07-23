@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode,HttpStatus, Post, Request, Response, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto, LoginDto } from 'src/dtos&entitys/user.dto';
+import { CreateUserDto, LoginDto } from 'src/forms/user.dto';
 import { LoginGuard } from './auth.guard';
 
 @Controller('auth')
@@ -14,8 +14,8 @@ export class AuthController {
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    async login(@Body() LoginDto: Record<string,any>) {
-        return this.authService.validateUser(LoginDto.user_id,LoginDto.user_password);
+    async login(@Body() loginDto: LoginDto) {
+        return this.authService.validateUser(loginDto.user_id,loginDto.user_password);
     }
 
     @UseGuards(LoginGuard)
