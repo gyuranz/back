@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { AppService } from './app.service';
 import { User } from './forms/schema.schema';
 import { CreateRoomDto, JoinRoomDto } from './forms/room.dto'
@@ -7,10 +7,17 @@ import { CreateRoomDto, JoinRoomDto } from './forms/room.dto'
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
-  // @Get('/:user_id/finished')
-  // async findUserInfoforMain(@Body() setDto: User){
-  //   return await this.appService.getUserInfoforMain(setDto.user_id);
-  // }
+
+ // @Get('/:user_id/finished')
+ // async findUserInfoforMain(@Req() request) {
+ //   console.log(request);
+ //   const url = request.url;
+ //   const parts = url.split('/');
+ //   const user_id = parts[parts.length - 2];
+ //   console.log(user_id);
+ //   return await this.appService.getUserInfoforMain(user_id);
+ //}
+
 
   // @Post('/:user_id/join')
   // async findUserInfoforJoin(@Body() setDto: User){
