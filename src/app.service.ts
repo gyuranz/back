@@ -6,6 +6,7 @@ import { Room } from './forms/schema.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { randomBytes } from 'crypto';
+import { find } from 'rxjs';
 
 @Injectable()
 export class AppService {
@@ -98,11 +99,21 @@ export class AppService {
     const createroomid = this.generateRandomString(6);
     console.log(createroomid);
     //방을 만들고 필요한 데이터 리턴
+    const user = await this.findService.getUserbyId(user_id);
+
     try {
       const room = await this.createRoom({ room_password: hashedPw, room_id: createroomid, room_name: createRoomDto.room_name });
-      console.log(createRoomDto.room_password);
-      console.log(hashedPw);
-      console.log(room.room_password);
+    // 양식에 맞게 미리 등록.
+    // 방이 가지고 있는 유저들의 데이터
+    const input_room_joined_user = { user_id: user.user_id, user_nickname: user.user_nickname };
+    //! room summary가 맞나?
+    //유저가 가지고 있는 유저가 들어갔던 방 데이터
+    const input_user_joined_room = { room_id: room.room_id, room_name: room.room_name, summary: room.room_summary };
+
+    //room_joined_user_list에 user_code 추가
+      room.room_joined_user_list.push(input_room_joined_user);
+    // user_joined_room_list 에 room_id 추가
+      user.user_joined_room_list.push(input_user_joined_room);
 
       return {
         room_name: room.room_name,
