@@ -14,7 +14,7 @@ import { Namespace, Socket } from 'socket.io';
 @WebSocketGateway({
   namespace: 'room',
   cors: {
-    origin: ['http://15.164.100.230:3000'],
+    origin: [ 'http://15.164.100.230:3000'],
   },
 })
 export class SocketGateway
