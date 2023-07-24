@@ -5,6 +5,7 @@ import { CreateRoomDto, JoinRoomDto } from './forms/room.dto';
 import { Room } from './forms/schema.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class AppService {
@@ -16,9 +17,12 @@ export class AppService {
   //유저의 아이디를 근거로, 유저의 정보를 비밀번호 제외하고 모두 리턴함
   async getUserInfoforMain(user_id: string) {
     const user = await this.findService.getUserbyId(user_id);
-    const { user_password, ...userexceptPW } = user;
+    
+    // const { user_password, ...userexceptPW } = user;
+    // console.log(userexceptPW);
     return {
-      userexceptPW
+      // userexceptPW
+      user
     };
   }
 
@@ -31,7 +35,8 @@ export class AppService {
   //유저의 아이디를 근거로, 과거에 들어갔던 방들의 목록을 조회해서 리턴함
   async getUserInfoforJoinandCreate(user_id: string) {
     const user = await this.findService.getUserbyId(user_id);
-    const { user_password, user_joined_room, ...userexceptPWandJoinRoom } = user;
+    const { user_password, ...userexceptPWandJoinRoom } = user;
+    console.log(userexceptPWandJoinRoom)
     return {
       userexceptPWandJoinRoom
     };
@@ -40,7 +45,7 @@ export class AppService {
 
 
   //방에 입장하고, 방 코드, 초대키, 방 이름 리턴
-  async joinNewRoom(joinRoomDto: JoinRoomDto) {
+  async joinNewRoom(user_id,joinRoomDto: JoinRoomDto) {
 
     const room = await this.findService.getRoombyId(joinRoomDto.room_id);
     if (!room) {
@@ -51,26 +56,25 @@ export class AppService {
       throw new HttpException('해당 방의 비밀번호와 일치하지 않습니다.', 422);
     }
     // 유저 정보를 가져와서
-    const user = await this.findService.getUserbyNickname(joinRoomDto.user_nickname);
+    const user = await this.findService.getUserbyId(user_id);
     //유저 닉네임을 가져온 유저의 정보로 등록
-    const user_nickname: string = joinRoomDto.user_nickname;
-    const user_id: string = user.user_id;
+
     // 양식에 맞게 미리 등록.
-    const input_room_joined_user = { user_id: user_id, user_nickname: user_nickname }
+    const input_room_joined_user = { user_id: user_id, user_nickname: user_id }
 
     // 방에 이전 방문 기록이 있는지 확인하고 없으면 room_joined_user에 user_code 추가
-    if (!room.room_joined_user.find((user)=> user.user_id === user_id)) {
+    if (!room.room_joined_user.find((user) => user.user_id === user_id)) {
       room.room_joined_user.push(input_room_joined_user);
     }
     return {
-      user_nickname: user.user_nickname,
       room_id: room.room_id,
-      room_name: room.room_name
+      room_name: room.room_name,
+      room_summary: room.room_summary
     };
   }
 
   // 방을 만들고, 방 코드, 방 이름, 초대키 리턴
-  async createNewRoom(createRoomDto: CreateRoomDto) {
+  async createNewRoom(user_id, createRoomDto: CreateRoomDto) {
     const roomIdValidate = await this.findService.getRoombyName(createRoomDto.room_name);   //닉네임을 기반으로 같은 닉네임을 가진 유저가 있는지 확인 후 중복검사
     if (roomIdValidate) {
       throw new HttpException(
@@ -80,21 +84,19 @@ export class AppService {
     }
     //비밀번호 4번 해싱
     const hashedPw = bcrypt.hashSync(createRoomDto.room_password, 4);
-
+    const createroomid = this.generateRandomString(6);
+    console.log(createroomid);
     //방을 만들고 필요한 데이터 리턴
     try {
-      const room = await this.createRoom({
-        room_password: hashedPw, ...createRoomDto
-      })
+      const room = await this.createRoom({ room_password: hashedPw, room_id: createroomid, room_name: createRoomDto.room_name });
       console.log(createRoomDto.room_password);
       console.log(hashedPw);
       console.log(room.room_password);
 
-      const roomIdFillto6 = this.zerofill(room.room_id, 6);
       return {
         room_name: room.room_name,
-        room_id: roomIdFillto6,
-        user_nickname: createRoomDto.user_nickname,
+        room_id: room.room_id,
+        room_password: createRoomDto.room_password
       }
     } catch {
       throw new HttpException('방 만들기에 실패했습니다. 다시 시도하세요', 500)
@@ -108,5 +110,10 @@ export class AppService {
   zerofill(value: number, digits: number) {
     var result = value.toString();
     return result.padStart(digits, '0')
+  }
+
+  generateRandomString(length: number): string {
+    const bytes = randomBytes(Math.ceil(length / 2));
+    return bytes.toString('hex').slice(0, length);
   }
 }

@@ -7,11 +7,12 @@ import { SocketGateway } from './socket.gateway';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-      exclude: ['/api*'],
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'public'),
+    //   exclude: ['/api*'],
+    // }),
   ],
   providers: [SocketGateway],
 })
-export class SocketModule {}
+
+export class SocketModule{}

@@ -38,6 +38,7 @@ export class AuthService {
                 ...userDto,
                 user_password: hashedPw,
             });
+
             return {
                 userId: user.user_id,
                 userNickname: user.user_nickname,
@@ -63,8 +64,8 @@ export class AuthService {
         if (!bcrypt.compareSync(input_user_password, hashedPw)) {
             throw new HttpException('비밀번호가 틀립니다.', 422);
         }
-
         return {
+            user_joined_room_list : user.user_joined_room_list,
             userId: user.user_id,
             userNickname: user.user_nickname,
             token: await this.jwtService.signAsync(payload),

@@ -35,19 +35,26 @@ export class AppController {
     * ! 리턴해줘야 하는 값, 
     * ! 1. 
    */
-  @Get('/:user_id/:room_id')
-  async joinRoom(@Param('user_id') user_id: string, @Param('room_id') room_id: string) {
+  @Get('/room/:room_id')
+  async joinRoom(@Body('user_id') user_id: string, @Param('room_id') room_id: string) {
     return await this.appService.permissionUsertoRoom(user_id, room_id);
   }
 
+  @Get('/:user_id/')
+  async mainpage(@Param('user_id') user_id: string) {
+    return await this.appService.getUserInfoforMain(user_id);
+  }
+  
   @Post('/:user_id/join')
-  async joinNewRoom(@Body() setDto: JoinRoomDto) {
-    return await this.appService.joinNewRoom(setDto)
+  async joinNewRoom(@Param ('user_id') user_id:string,@Body() setDto: JoinRoomDto) {
+    return await this.appService.joinNewRoom(user_id, setDto)
   }
 
 
-  @Post(':/user_id/create')
-  async createNewRoom(@Body() setDto: CreateRoomDto) {
-    return await this.appService.createNewRoom(setDto);
+  @Post('/:user_id/create')
+  async createNewRoom(@Param ('user_id') user_id:string, @Body() setDto: CreateRoomDto) {
+    console.log("통과");
+    return await this.appService.createNewRoom(user_id,setDto);
   }
+
 }

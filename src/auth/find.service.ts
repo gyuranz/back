@@ -31,7 +31,7 @@ export class FindService {
         return result;
     }
 
-    async getRoombyId(room_id: number) {
+    async getRoombyId(room_id: string) {
         const result = await this.roomModel.findOne({ room_id });
         return result;
     }
