@@ -51,7 +51,13 @@ export class Room {
     room_joined_user_list: { user_id: string; user_nickname: string }[];
 }
 
+@Schema()
+export class STT{
+    @Prop()
+    stt_message: string;
+}
 
 
+export const STTSchema = SchemaFactory.createForClass(STT);
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);

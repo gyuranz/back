@@ -11,12 +11,14 @@ import {
   } from '@nestjs/websockets';
   import { Socket } from 'socket.io'; // Server
   import { SttService } from './stt.service';
+
   // , methods: ['GET', 'POST'] 
 
   //! 임시 룸 생성
   // @WebSocketGateway({ cors: { origin: '/:user_id/:room'} })
   @WebSocketGateway({ cors: { origin: '/:user_id/room'} })
   export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
+
     @WebSocketServer()
     server: Socket;
   
@@ -40,7 +42,7 @@ import {
         this.server.emit('receive_message', 'got this message' + message);
       }, 1000);
     }
-  
+    
     @SubscribeMessage('startGoogleCloudStream')
     async handleStartGoogleCloudStream(client: Socket, @MessageBody() data: any) {
       // this.startRecognitionStream(client, data);
