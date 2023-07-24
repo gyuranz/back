@@ -38,7 +38,16 @@ content-type: application/json
     "user_password" : "a1234567"
 }
 
+### asdf
+POST http://localhost:8080/son7/create
+content-type: application/json
+
+{
+    "user_nickname" : "kdjy2238",
+    "user_password" : "a1234567"
+}
 
 ### GUARD 테스트
 curl http://localhost:8080/auth/test-guard -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVVc2VyX0R0IjoxLCJ1c2VyX2NvZGUiOjEsInVzZXJfaWQiOiJqb2huMTIzNCIsInVzZXJfbmlja25hbWUiOiJqb2huMiIsImlhdCI6MTY4OTkyNDYxNiwiZXhwIjoxNjg5OTI0Njc2fQ.e_tYWUXal5k9LXCcuyAKFGtqWdsKJm5ChiekKpSgbAM"
 {"sub":1,"username":"kdy2238","iat":...,"exp":...}
+
