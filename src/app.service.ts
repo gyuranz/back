@@ -2,7 +2,7 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { FindService } from './auth/find.service';
 import * as bcrypt from "bcrypt";
 import { CreateRoomDto, JoinRoomDto } from './forms/room.dto';
-import { Room } from './forms/schema.schema';
+import { Room, User } from './forms/schema.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { randomBytes } from 'crypto';
@@ -12,8 +12,8 @@ import { find } from 'rxjs';
 export class AppService {
   constructor(
     private findService: FindService,
-    @InjectModel(Room.name) private roomModel: Model<Room>) { }
-
+    @InjectModel(Room.name) private roomModel: Model<Room>,
+    @InjectModel(User.name) private userModel: Model<User>) { }
 
   //유저의 아이디를 근거로, 유저의 정보를 비밀번호 제외하고 모두 리턴함
   async getUserInfoforMain(user_id: string) {
@@ -71,13 +71,15 @@ export class AppService {
     // 방에 이전 방문 기록이 있는지 확인하고 없으면 room_joined_user_list에 user_code 추가
     if (!room.room_joined_user_list.find((user) => user.user_id === user_id)) {
       room.room_joined_user_list.push(input_room_joined_user);
+      this.roomModel.collection.updateOne({ room_id:room.room_id }, { $set: { room_joined_user_list: room.room_joined_user_list } });
     };
 
     // 유저가 이전 방문 기록이 있는지 확인하고 없으면 user_joined_room_list 에 room_id 추가
     if (!user.user_joined_room_list.find((room) => room.room_id === joinRoomDto.room_id)) {
       user.user_joined_room_list.push(input_user_joined_room);
+      this.userModel.collection.updateOne({ user_id }, { $set: { user_joined_room_list: user.user_joined_room_list } });
     };
-    
+
     return {
       room_id: room.room_id,
       room_name: room.room_name,
@@ -100,20 +102,24 @@ export class AppService {
     console.log(createroomid);
     //방을 만들고 필요한 데이터 리턴
     const user = await this.findService.getUserbyId(user_id);
+    const input_room_joined_user = { user_id: user.user_id, user_nickname: user.user_nickname };
+    //room_joined_user_list에 user_id 추가
 
     try {
-      const room = await this.createRoom({ room_password: hashedPw, room_id: createroomid, room_name: createRoomDto.room_name });
-    // 양식에 맞게 미리 등록.
-    // 방이 가지고 있는 유저들의 데이터
-    const input_room_joined_user = { user_id: user.user_id, user_nickname: user.user_nickname };
-    //! room summary가 맞나?
-    //유저가 가지고 있는 유저가 들어갔던 방 데이터
-    const input_user_joined_room = { room_id: room.room_id, room_name: room.room_name, summary: room.room_summary };
+      const room = await this.createRoom({ room_password: hashedPw, room_id: createroomid, room_name: createRoomDto.room_name, room_joined_user_list: input_room_joined_user });
+      // 양식에 맞게 미리 등록.
+      // 방이 가지고 있는 유저들의 데이터
+      //! room summary가 맞나?
+      //유저가 가지고 있는 유저가 들어갔던 방 데이터
+      const input_user_joined_room = { room_id: room.room_id, room_name: room.room_name, summary: room.room_summary };
 
-    //room_joined_user_list에 user_code 추가
-      room.room_joined_user_list.push(input_room_joined_user);
-    // user_joined_room_list 에 room_id 추가
+      // user_joined_room_list 에 room_id 추가
       user.user_joined_room_list.push(input_user_joined_room);
+      console.log(user);
+      console.log(user_id);
+      console.log(room);
+      this.userModel.collection.updateOne({ user_id }, { $set: { user_joined_room_list: user.user_joined_room_list } });
+
 
       return {
         room_name: room.room_name,

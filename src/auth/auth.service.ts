@@ -77,7 +77,7 @@ export class AuthService {
     createUser(user): Promise<User> {
         return this.userModel.create(user);
     }
-
+}
 
     // //유저 삭제 
     // deleteUser(user_id: string) {
@@ -93,4 +93,4 @@ export class AuthService {
 //         console.log(user);
 //         this.userModel.save(user);
 //     }
-}
+// }
