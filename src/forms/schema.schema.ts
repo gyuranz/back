@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory, } from '@nestjs/mongoose';
 import { JoinRoomDto } from "./room.dto";
 import { type } from "os";
 import { randomBytes } from "crypto"
+import { Timestamp } from "mongodb";
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -20,12 +21,11 @@ export class User {
     @Prop({ unique: true })
     user_nickname: string;
 
-    //! 어떻게 튜플orArray를 집어넣을 것인지 추후 수정
     @Prop({ type: [{ room_id: String, room_name: String, summary: String }] })
     user_joined_room_list: { room_id: string, room_name: string, summary: string }[];
 
-    @Prop()
-    createUser_Dt: Date;
+    // @Prop()
+    // createUser_Dt: Date;
 }
 
 @Schema()
@@ -41,12 +41,10 @@ export class Room {
 
     @Prop()
     room_summary: string;
+    
+    @Prop()
+    entire_chat: string;
 
-    //! 어떻게 튜플orArray를 집어넣을 것인지 추후 수정
-    @Prop({ type: [{ user_code: Number, user_nickname: String, message_id: String, message_text: String, message_creatAt: Date }] })
-    room_chat_contents: { user_code: number, user_nickname: string, message_id: string, message_text: string, message_creatAt: Date }[];
-
-    //! 어떻게 튜플orArray를 집어넣을 것인지 추후 수정
     @Prop({ type: [{ user_id: String, user_nickname: String }], default: [] })
     room_joined_user_list: { user_id: string; user_nickname: string }[];
 }
@@ -57,7 +55,30 @@ export class STT{
     stt_message: string;
 }
 
+@Schema()
+export class Chat{
 
-export const STTSchema = SchemaFactory.createForClass(STT);
+    @Prop()
+    room_id:string;
+
+    @Prop()
+    user_nickname:string;
+    
+    @Prop()
+    chat_id:string;
+    
+    @Prop()
+    chat_text:string;
+    
+    @Prop({default:Date.now})
+    chat_creatAt:Date;
+    
+    // @Prop({type: [{user_nickname:String, user_id:String, message_id:String, message_text:String, message_creatAt:Date}], default: []})
+    // realtime_chat: {user_nickname:string, user_id:string, message_id:string, message_text:string, message_creatAt:Date}[];
+}
+
+
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
+export const ChatSchema = SchemaFactory.createForClass(Chat);
+export const STTSchema = SchemaFactory.createForClass(STT);

@@ -10,6 +10,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Namespace, Socket } from 'socket.io';
+import { ChatInputDto } from 'src/forms/chat.dto';
 
 @WebSocketGateway({
   namespace: 'room',

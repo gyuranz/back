@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { SocketGateway } from './socket.gateway';
+import { SocketService } from './socket.service';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { SocketGateway } from './socket.gateway';
     //   exclude: ['/api*'],
     // }),
   ],
-  providers: [SocketGateway],
+  providers: [SocketGateway, SocketService],
 })
 
 export class SocketModule{}
