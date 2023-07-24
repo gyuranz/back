@@ -12,7 +12,7 @@ import { Injectable, Param } from '@nestjs/common';
 @WebSocketGateway({
   namespace: 'room',
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: [':3000'],
   },
 })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {

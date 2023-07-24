@@ -64,6 +64,7 @@ export class AuthService {
         if (!bcrypt.compareSync(input_user_password, hashedPw)) {
             throw new HttpException('비밀번호가 틀립니다.', 422);
         }
+        console.log(user.user_joined_room_list);
         return {
             user_joined_room_list : user.user_joined_room_list,
             userId: user.user_id,

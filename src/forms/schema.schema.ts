@@ -48,7 +48,7 @@ export class Room {
 
     //! 어떻게 튜플orArray를 집어넣을 것인지 추후 수정
     @Prop({ type: [{ user_id: String, user_nickname: String }], default: [] })
-    room_joined_user: { user_id: string; user_nickname: string }[];
+    room_joined_user_list: { user_id: string; user_nickname: string }[];
 }
 
 

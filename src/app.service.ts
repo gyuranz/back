@@ -17,7 +17,7 @@ export class AppService {
   //유저의 아이디를 근거로, 유저의 정보를 비밀번호 제외하고 모두 리턴함
   async getUserInfoforMain(user_id: string) {
     const user = await this.findService.getUserbyId(user_id);
-    
+
     // const { user_password, ...userexceptPW } = user;
     // console.log(userexceptPW);
     return {
@@ -45,7 +45,7 @@ export class AppService {
 
 
   //방에 입장하고, 방 코드, 초대키, 방 이름 리턴
-  async joinNewRoom(user_id,joinRoomDto: JoinRoomDto) {
+  async joinNewRoom(user_id, joinRoomDto: JoinRoomDto) {
 
     const room = await this.findService.getRoombyId(joinRoomDto.room_id);
     if (!room) {
@@ -60,12 +60,23 @@ export class AppService {
     //유저 닉네임을 가져온 유저의 정보로 등록
 
     // 양식에 맞게 미리 등록.
-    const input_room_joined_user = { user_id: user_id, user_nickname: user_id }
+    // 방이 가지고 있는 유저들의 데이터
+    const input_room_joined_user = { user_id: user.user_id, user_nickname: user.user_nickname };
+    //! room summary가 맞나?
+    //유저가 가지고 있는 유저가 들어갔던 데이터
+    const input_user_joined_room = { room_id: room.room_id, room_name: room.room_name, summary: room.room_summary };
 
-    // 방에 이전 방문 기록이 있는지 확인하고 없으면 room_joined_user에 user_code 추가
-    if (!room.room_joined_user.find((user) => user.user_id === user_id)) {
-      room.room_joined_user.push(input_room_joined_user);
-    }
+
+    // 방에 이전 방문 기록이 있는지 확인하고 없으면 room_joined_user_list에 user_code 추가
+    if (!room.room_joined_user_list.find((user) => user.user_id === user_id)) {
+      room.room_joined_user_list.push(input_room_joined_user);
+    };
+
+    // 유저가 이전 방문 기록이 있는지 확인하고 없으면 user_joined_room_list 에 room_id 추가
+    if (!user.user_joined_room_list.find((room) => room.room_id === joinRoomDto.room_id)) {
+      user.user_joined_room_list.push(input_user_joined_room);
+    };
+    
     return {
       room_id: room.room_id,
       room_name: room.room_name,
