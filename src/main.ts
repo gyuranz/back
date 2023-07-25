@@ -9,9 +9,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const socket = await NestFactory.create<NestExpressApplication>(AppModule);
-
   app.enableCors();
-
   app.useGlobalPipes(new ValidationPipe());   //유효성 검사를 할 validatopnPipe 객체 추가
   await app.listen(8080);
 }

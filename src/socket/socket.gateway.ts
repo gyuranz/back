@@ -4,58 +4,51 @@ import {
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Namespace, Socket } from 'socket.io';
-import { ChatInputDto } from 'src/forms/chat.dto';
 
+interface MessagePayload {
+  room_id: string;
+  user_nickname:string;
+  message: string;
+}
+
+let createdRooms: string[] = [];
+
+// gateway로 들어오는 신호에 /room 이 있는 경우 핸드쉐이크, origin 안의 url을 신뢰할 수 있는 url로 등록하여 cors 오류 방지.
 @WebSocketGateway({
   namespace: `room`,
   cors: {
-    origin: [ 'http://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com','http://localhost:3000/','http://15.164.100.230:3000'],
+    origin: ['http://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com', 'http://localhost:3000', 'http://15.164.100.230:3000'],
   },
-
 })
+
 export class SocketGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayConnection, OnGatewayDisconnect {
+  // 터미널에 연결 잘 되었는지 [Gateway] 라는 이름으로 표시
   private logger = new Logger('Gateway');
 
   @WebSocketServer() nsp: Namespace;
-  afterInit() {
-    this.nsp.adapter.on('create-room', (room) => {
-      this.logger.log(`"Room:${room}"이 생성되었습니다.`);
-    });
-
-
-    this.nsp.adapter.on('join-room', (room, id) => {
-      this.logger.log(`"Socket:${id}"이 "Room:${room}"에 참여하였습니다.`);
-    });
-
-
-    this.nsp.adapter.on('leave-room', (room, id) => {
-      this.logger.log(`"Socket:${id}"이 "Room:${room}"에서 나갔습니다.`);
-    });
-
-    this.logger.log('웹소켓 서버 초기화 ✅');
-  }
-
-
-  handleConnection(@ConnectedSocket() socket: Socket) {
+  // ! 핸드쉐이크랑 동시 connection 이 발생할텐데, 여기에 user_nickname 값을 보낼 수 있는가.
+  // 커넥션 된 경우 
+  handleConnection(@ConnectedSocket() socket: Socket, @MessageBody() user_nickname:string) {
     this.logger.log(`${socket.id} 소켓 연결`);
-
-    socket.broadcast.emit('message', {
-      message: `${socket.id}가 들어왔습니다.`,
-    });
   }
-  
+
   handleDisconnect(@ConnectedSocket() socket: Socket) {
     this.logger.log(`${socket.id} 소켓 연결 해제 ❌`);
   }
+  // // 커넥션 된 경우 
+  // handleConnection(@ConnectedSocket() user_nickname: string) {
+  //   this.logger.log(`${user_nickname} 소켓 연결`);
+  // }
 
+  // handleDisconnect(@ConnectedSocket() user_nickname: string) {
+  //   this.logger.log(`${user_nickname} 소켓 연결 해제 ❌`);
+  // }
   @SubscribeMessage('message')
   handleMessage(
     @ConnectedSocket() socket: Socket,
@@ -64,100 +57,17 @@ export class SocketGateway
     socket.broadcast.emit('message', { username: socket.id, message });
     return { username: socket.id, message };
   }
+
+  //시작할 때 한번 'join-room', room_id 보내주어야 함.
+  @SubscribeMessage('join-room')
+  handleJoinRoom(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() room_id: string,
+  ) {
+    socket.join(room_id); // join room
+
+    return { success: true };
+  }
 }
 
-// import {
-//   WebSocketGateway,
-//   WebSocketServer,
-//   OnGatewayConnection,
-//   OnGatewayDisconnect,
-// } from '@nestjs/websockets';
-// import { Server } from 'socket.io';
-// import { Injectable, Param } from '@nestjs/common';
 
-// @Injectable()
-// // @WebSocketGateway(8000, { namespace: '/'})
-// @WebSocketGateway({namespace: 'room'})
-// export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
-//   @WebSocketServer() server: Server;
-
-//   private publicRooms: string[] = [];
-
-//   async handleConnection(socket: any) {
-//     const room_id = socket.handshake.query.room_id;
-//     socket.onAny((event) => {
-//       console.log(`Socket Event: ${event}`);
-//     });
-    
-//     // socket.on('room', (roomName, showRoom) => {
-//     //   socket.join(roomName);
-//     //   this.showRoom(roomName);
-//     //   console.log(socket.rooms);
-//     //   socket.to(roomName).emit('greeting', socket.nickname);
-//     //   this.server.sockets.emit('roomUpdate', this.updatePublicRoom());
-
-//     //   showRoom(roomName);
-//     // });
-
-//     socket.on('sendMessage', (message, sendMessage) => {
-//       message = `${socket.user_nickname}: ${message}`;
-//       console.log(message);
-//       // socket.to(room_id).emit('sendMessage', message, sendMessage(message));
-//     });
-
-//     socket.on('disconnecting', () => {
-//       socket.rooms.forEach((room) =>
-//         socket.to(room).emit('goodbye', socket.nickname),
-//       );
-//       this.server.sockets.emit('roomUpdate', this.updatePublicRoom());
-//     });
-
-//     socket.on('nickname', (nickname, saveNickname) => {
-//       socket.nickname = nickname;
-//       console.log(`설정한 닉네임: ${socket.nickname}`);
-//       saveNickname(nickname);
-//     });
-
-//   //   socket.on('videoRoomName', (videoRoomName, showVideoOption) => {
-//   //     socket.join(videoRoomName);
-//   //     showVideoOption();
-//   //     socket.to(videoRoomName).emit('videoGreeting');
-//   //   });
-
-//   //   socket.on('offer', (offer, videoRoomName) => {
-//   //     socket.to(videoRoomName).emit('offer', offer);
-//   //   });
-
-//   //   socket.on('answer', (answer, roomName) => {
-//   //     socket.to(roomName).emit('answer', answer);
-//   //   });
-
-//   //   socket.on('ice', (ice, videoRoomName) => {
-//   //     socket.to(videoRoomName).emit('ice', ice);
-//   //   });
-//   }
-
-//   handleDisconnect(socket: any) {}
-
-//   private updatePublicRoom(): string[] {
-//     const {
-//       sockets: {
-//         adapter: { rooms, sids },
-//       },
-//     } = this.server;
-
-//     let publicRooms: string[] = [];
-//     rooms.forEach((_, key) => {
-//       if (sids.get(key) === undefined) {
-//         publicRooms.push(key);
-//       }
-//     });
-
-//     this.publicRooms = publicRooms;
-//     return publicRooms;
-//   }
-
-//   private showRoom(roomName: string) {
-//     this.server.to(roomName).emit('showRoom', roomName);
-//   }
-// }
