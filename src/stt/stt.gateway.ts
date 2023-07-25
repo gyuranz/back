@@ -18,7 +18,7 @@ import {
   @WebSocketGateway({
     namespace: 'room',
     cors: {
-      origin: ['*'],
+      origin: [ 'http://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com/:3000'],
     },
   })
   export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {

@@ -15,8 +15,7 @@ import { ChatInputDto } from 'src/forms/chat.dto';
 @WebSocketGateway({
   namespace: `room`,
   cors: {
-    // origin: [ 'http://15.164.100.230:3000'],
-    origin: ['*'],
+    origin: [ 'http://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com/:3000'],
   },
 
 })
