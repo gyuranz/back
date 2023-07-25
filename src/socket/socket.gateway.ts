@@ -52,19 +52,20 @@ export class SocketGateway
   @SubscribeMessage('message')
   handleMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() { room_id, user_nickname, message }: MessagePayload,
+    @MessageBody() message: string,
   ) {
-    socket.broadcast.to(room_id).emit('message', { user_nickname: user_nickname, message });
-    return { user_nickname: user_nickname, message };
+    socket.broadcast.emit('message', { username: socket.id, message });
+    return { username: socket.id, message };
   }
 
+  //시작할 때 한번 'join-room', room_id 보내주어야 함.
   @SubscribeMessage('join-room')
   handleJoinRoom(
     @ConnectedSocket() socket: Socket,
     @MessageBody() room_id: string,
   ) {
     socket.join(room_id); // join room
-    
+
     return { success: true };
   }
 }
