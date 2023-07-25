@@ -16,6 +16,7 @@ import { ChatInputDto } from 'src/forms/chat.dto';
   namespace: 'room',
   cors: {
     origin: [ 'http://15.164.100.230:3000'],
+    // origin: [ 'http://localhost:3000'],
   },
 })
 export class SocketGateway

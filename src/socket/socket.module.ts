@@ -4,9 +4,12 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { SocketGateway } from './socket.gateway';
 import { SocketService } from './socket.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Chat, ChatSchema } from 'src/forms/schema.schema';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([{name:Chat.name, schema:ChatSchema}]),
     ConfigModule.forRoot(),
     // ServeStaticModule.forRoot({
     //   rootPath: join(__dirname, '..', 'public'),

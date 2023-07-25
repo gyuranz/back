@@ -15,8 +15,13 @@ import {
   // , methods: ['GET', 'POST'] 
 
   //! 임시 룸 생성
-  // @WebSocketGateway({ cors: { origin: '/:user_id/:room'} })
-  @WebSocketGateway({ cors: { origin: '/:user_id/room'} })
+  @WebSocketGateway({
+    namespace: 'room',
+    cors: {
+      // origin: [ 'http://15.164.100.230:3000'],
+      origin: [ 'http://localhost:3000'],
+    },
+  })
   export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @WebSocketServer()
