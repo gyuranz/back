@@ -119,6 +119,8 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if(isFinal){
         // DB에 저장하는 코드
         this.sttService.createMessage({stt_message:transcription} as any);
+        //! 임시로 발표용 DB 컬렉션에 넣는 코드
+        this.sttService.createMessagetoPpt({message_text:transcription} as any);
       }
       // if end of utterance, let's restart stream
       // this is a small hack to keep restarting the stream on the server and keep the connection with Google API
