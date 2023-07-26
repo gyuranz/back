@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SttModule } from './stt/stt.module';
 import { SocketModule } from './socket/socket.module';
+import { RoomModule } from './room/room.module';
+import { GptService } from './room/gpt.service';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { SocketModule } from './socket/socket.module';
     SttModule,
     AuthModule,
     SocketModule,
+    RoomModule,
   ],
   controllers: [AppController],
   providers: [AppService],
