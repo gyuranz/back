@@ -13,7 +13,7 @@ export class SttService {
   
   constructor(
     private readonly configService: ConfigService,
-    @InjectModel(STT.name) private sttModel: Model<STT>
+    @InjectModel(STT.name) private sttModel: Model<STT>,
     @InjectModel(Ppt.name) private pptModel: Model<Ppt>
     ) {
     this.speechClient = new SpeechClient({
