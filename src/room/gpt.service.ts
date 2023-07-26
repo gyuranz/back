@@ -44,7 +44,7 @@ export class GptService {
 
     async findFromDB() {
         // prompt는 요약, 퀴즈, 질문 마다 다르게 하면 될듯 
-        let prompt = "이 다음에 나오는 글을 5줄로 요약해줘 \n";
+        let prompt = "이 다음에 나오는 글을  필요없어보이는 말은 빼고 10개 문장으로 요약해줘. 말끝에 '~했음,' 식으로 출력하고 전체를 배열형식으로 출력해줘\n";
         // 이거 발표용 DB 스키마 로 수정해야됌
         const result = await this.pptModel.find({}, 'message_text');
         const extractResult = result.map((data) => data.message_text);
@@ -74,7 +74,11 @@ export class GptService {
     }
 
     async findFromSummaryDB() {
-        const result = await this.pptModel.find({}, 'summary');
-        return result;
+        const result = await this.summModel.find({}, 'summary');
+        let extractResult = result.map((data) => data.summary);
+        let summarytoArray = extractResult[0].split(",");
+        console.log(typeof summarytoArray);
+        console.log(summarytoArray);
+        return {'summary':summarytoArray}
     }
 }

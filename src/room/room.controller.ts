@@ -1,9 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 import { GptService } from './gpt.service';
 
-@Controller('room')
+@Controller(`room`)
 export class RoomController {
     constructor(private gptService:GptService){}
+
     @Get('sum')
     async findFromDB() {
         // 스터디, 회의 중에 DB에 저장된 STT를 찾아서 발표 종료 버튼을 누르면, prompt로 ChatGPT에 보낸 후, 
@@ -15,8 +16,10 @@ export class RoomController {
         return await this.gptService.generateText(prompt);
     }
 
-    @Get(':room_id/summary')
+    @Get(`:room_id/summary`)
     async findSummary(){
+        console.log('summary');
         const summary = await this.gptService.findFromSummaryDB();
+        return summary;
     }
 }
