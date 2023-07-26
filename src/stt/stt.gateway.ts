@@ -1,4 +1,3 @@
-// src/app.gateway.ts
 
 import {
   WebSocketGateway,
@@ -22,8 +21,9 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Socket;
 
-  constructor(private readonly sttService: SttService) {}
-  
+
+  constructor(private readonly sttService: SttService) { }
+
   // afterInit() {}
 
   handleConnection(@ConnectedSocket() client: Socket) {
@@ -54,7 +54,7 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('** ending google cloud stream **\n');
     this.stopRecognitionStream();
   }
-  
+
   @SubscribeMessage('send_audio_data')
   async handleSendAudioData(
     @MessageBody() audioData: { audio: Buffer },
@@ -133,6 +133,7 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.error('Error streaming google api ' + err);
   }
 }
+
 
   private stopRecognitionStream() {
     if (this.recognizeStream) {

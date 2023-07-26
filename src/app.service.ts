@@ -145,3 +145,4 @@ export class AppService {
     return bytes.toString('hex').slice(0, length);
   }
 }
+
