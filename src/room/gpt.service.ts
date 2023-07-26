@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { Configuration, OpenAIApi } from 'openai';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { Ppt, STT } from 'src/forms/schema.schema';
+import { Ppt, STT, Summ } from 'src/forms/schema.schema';
 import { Model } from 'mongoose';
 
 
@@ -11,12 +11,15 @@ export class GptService {
     openai: OpenAIApi;
     constructor(
         private readonly configService: ConfigService,
-        @InjectModel(Ppt.name) private pptModel: Model<Ppt>) {
+        @InjectModel(Ppt.name) private pptModel: Model<Ppt>,
+        @InjectModel(Summ.name) private summModel: Model<Summ>
+    ) {
         const configuration = new Configuration({
             organization: this.configService.get<string>('OPENAI_ORGANIZATION'),
             apiKey: this.configService.get<string>('CHATGPT_OPEN_API_KEY')
         })
         this.openai = new OpenAIApi(configuration);
+
     }
 
 
@@ -31,6 +34,7 @@ export class GptService {
                 max_tokens: 10000,
                 temperature: 1
             })
+            console.log(response.data.choices[0].message.content)
             return response.data.choices[0].message.content
         } catch (error) {
             console.log(error)
@@ -44,16 +48,33 @@ export class GptService {
         // 이거 발표용 DB 스키마 로 수정해야됌
         const result = await this.pptModel.find({}, 'message_text');
         const extractResult = result.map((data) => data.message_text);
-        // for (let elem of extractResult) {
-        //     prompt += elem;
-        // }
-        prompt += extractResult[0];
-        prompt += extractResult[1];
-        console.log(prompt)
+        for (let elem of extractResult) {
+            prompt += elem;
+        }
+        // prompt += extractResult[0];
+        // prompt += extractResult[1];
+        // console.log(prompt)
         return prompt;
     }
 
     async generateText(prompt: string): Promise<string> {
         return this.generateTextGPT3(prompt);
+    }
+
+    // async gotoSummary() {
+    //     const prompt = await this.findFromDB();
+    //     const summary = await this.generateText(prompt);
+
+    //   }
+    SummarytoDB(summary:string): Promise<Summ> {
+        const summdto = {
+            summary: summary,
+        }
+        return this.summModel.create(summdto);
+    }
+
+    async findFromSummaryDB() {
+        const result = await this.pptModel.find({}, 'summary');
+        return result;
     }
 }

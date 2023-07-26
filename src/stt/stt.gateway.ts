@@ -10,6 +10,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io'; // Server
 import { SttService } from './stt.service';
+import { GptService } from 'src/room/gpt.service';
 // , methods: ['GET', 'POST'] 
 @WebSocketGateway({
   namespace: 'room',
@@ -22,7 +23,8 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Socket;
 
 
-  constructor(private readonly sttService: SttService) { }
+  constructor(private readonly sttService: SttService,
+    private readonly gptService:GptService) { }
 
   // afterInit() {}
 
@@ -50,9 +52,12 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('endGoogleCloudStream')
-  handleEndGoogleCloudStream() {
+  async handleEndGoogleCloudStream() {
     console.log('** ending google cloud stream **\n');
     this.stopRecognitionStream();
+    const prompt = await this.gptService.findFromDB();
+    console.log(prompt);
+    this.gptService.SummarytoDB(await this.gptService.generateText(prompt))
   }
 
   @SubscribeMessage('send_audio_data')

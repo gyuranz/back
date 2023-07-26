@@ -20,6 +20,12 @@ export class Ppt{
 }
 
 @Schema()
+export class Summ{
+    @Prop()
+    summary: string;
+}
+
+@Schema()
 export class User {
     @Prop()
     user_code: number;
@@ -94,3 +100,4 @@ export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
 export const ChatSchema = SchemaFactory.createForClass(Chat);
 export const STTSchema = SchemaFactory.createForClass(STT);
+export const SummSchema = SchemaFactory.createForClass(Summ);

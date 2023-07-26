@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { GptService } from './gpt.service';
 
-@Controller('roo')
+@Controller('room')
 export class RoomController {
     constructor(private gptService:GptService){}
     @Get('sum')
@@ -13,5 +13,10 @@ export class RoomController {
         const prompt = await this.gptService.findFromDB();
         // prompt(stt_message를 전부 합침)를 GPT에 보내서, 그 결과를 반환
         return await this.gptService.generateText(prompt);
+    }
+
+    @Get(':room_id/summary')
+    async findSummary(){
+        const summary = await this.gptService.findFromSummaryDB();
     }
 }
