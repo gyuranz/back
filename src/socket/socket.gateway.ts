@@ -11,17 +11,17 @@ import {
 } from '@nestjs/websockets';
 import { Namespace, Socket } from 'socket.io';
 import { ChatInputDto } from 'src/forms/chat.dto';
+import { SocketService } from './socket.service';
 
 @WebSocketGateway({
   namespace: `room`,
   cors: {
-    origin: [ 'http://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com','http://localhost:3000/','http://15.164.100.230:3000'],
+    origin: ['http://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com', 'http://localhost:3000', 'http://15.164.100.230:3000'],
   },
 
 })
-export class SocketGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private socketService: SocketService){};
   private logger = new Logger('Gateway');
 
   @WebSocketServer() nsp: Namespace;
@@ -51,7 +51,7 @@ export class SocketGateway
       message: `${socket.id}가 들어왔습니다.`,
     });
   }
-  
+
   handleDisconnect(@ConnectedSocket() socket: Socket) {
     this.logger.log(`${socket.id} 소켓 연결 해제 ❌`);
   }
@@ -61,103 +61,9 @@ export class SocketGateway
     @ConnectedSocket() socket: Socket,
     @MessageBody() message: string,
   ) {
+    this.socketService.createChat( socket.id, message );
     socket.broadcast.emit('message', { username: socket.id, message });
     return { username: socket.id, message };
   }
 }
 
-// import {
-//   WebSocketGateway,
-//   WebSocketServer,
-//   OnGatewayConnection,
-//   OnGatewayDisconnect,
-// } from '@nestjs/websockets';
-// import { Server } from 'socket.io';
-// import { Injectable, Param } from '@nestjs/common';
-
-// @Injectable()
-// // @WebSocketGateway(8000, { namespace: '/'})
-// @WebSocketGateway({namespace: 'room'})
-// export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
-//   @WebSocketServer() server: Server;
-
-//   private publicRooms: string[] = [];
-
-//   async handleConnection(socket: any) {
-//     const room_id = socket.handshake.query.room_id;
-//     socket.onAny((event) => {
-//       console.log(`Socket Event: ${event}`);
-//     });
-    
-//     // socket.on('room', (roomName, showRoom) => {
-//     //   socket.join(roomName);
-//     //   this.showRoom(roomName);
-//     //   console.log(socket.rooms);
-//     //   socket.to(roomName).emit('greeting', socket.nickname);
-//     //   this.server.sockets.emit('roomUpdate', this.updatePublicRoom());
-
-//     //   showRoom(roomName);
-//     // });
-
-//     socket.on('sendMessage', (message, sendMessage) => {
-//       message = `${socket.user_nickname}: ${message}`;
-//       console.log(message);
-//       // socket.to(room_id).emit('sendMessage', message, sendMessage(message));
-//     });
-
-//     socket.on('disconnecting', () => {
-//       socket.rooms.forEach((room) =>
-//         socket.to(room).emit('goodbye', socket.nickname),
-//       );
-//       this.server.sockets.emit('roomUpdate', this.updatePublicRoom());
-//     });
-
-//     socket.on('nickname', (nickname, saveNickname) => {
-//       socket.nickname = nickname;
-//       console.log(`설정한 닉네임: ${socket.nickname}`);
-//       saveNickname(nickname);
-//     });
-
-//   //   socket.on('videoRoomName', (videoRoomName, showVideoOption) => {
-//   //     socket.join(videoRoomName);
-//   //     showVideoOption();
-//   //     socket.to(videoRoomName).emit('videoGreeting');
-//   //   });
-
-//   //   socket.on('offer', (offer, videoRoomName) => {
-//   //     socket.to(videoRoomName).emit('offer', offer);
-//   //   });
-
-//   //   socket.on('answer', (answer, roomName) => {
-//   //     socket.to(roomName).emit('answer', answer);
-//   //   });
-
-//   //   socket.on('ice', (ice, videoRoomName) => {
-//   //     socket.to(videoRoomName).emit('ice', ice);
-//   //   });
-//   }
-
-//   handleDisconnect(socket: any) {}
-
-//   private updatePublicRoom(): string[] {
-//     const {
-//       sockets: {
-//         adapter: { rooms, sids },
-//       },
-//     } = this.server;
-
-//     let publicRooms: string[] = [];
-//     rooms.forEach((_, key) => {
-//       if (sids.get(key) === undefined) {
-//         publicRooms.push(key);
-//       }
-//     });
-
-//     this.publicRooms = publicRooms;
-//     return publicRooms;
-//   }
-
-//   private showRoom(roomName: string) {
-//     this.server.to(roomName).emit('showRoom', roomName);
-//   }
-// }

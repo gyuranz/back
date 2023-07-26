@@ -20,3 +20,13 @@ export class ChatInputDto {
     @IsString()
     chat_text: string;
 }
+
+export class PptDto {
+    
+    @IsString()
+    socket_id: string;
+    
+
+    @IsString()
+    message_text: string;
+}
