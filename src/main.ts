@@ -11,6 +11,6 @@ async function bootstrap() {
   const socket = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());   //유효성 검사를 할 validatopnPipe 객체 추가
-  await app.listen(3000);
+  await app.listen(8080);
 }
 bootstrap();
