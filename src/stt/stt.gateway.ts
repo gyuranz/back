@@ -14,7 +14,7 @@ import { SttService } from './stt.service';
 @WebSocketGateway({
   namespace: 'room',
   cors: {
-    origin: [ 'https://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com','http://localhost:3000','https://15.164.100.230:3000'],
+    origin: [ 'https://gotojungle.shop', 'https://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com','http://localhost:3000','https://15.164.100.230:3000'],
   },
 })
 export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -118,9 +118,9 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
       if(isFinal){
         // DB에 저장하는 코드
-        this.sttService.createMessage({stt_message:transcription} as any);
-        //! 임시로 발표용 DB 컬렉션에 넣는 코드
-        this.sttService.createMessagetoPpt({message_text:transcription} as any);
+        // this.sttService.createMessage({stt_message:transcription} as any);
+        
+        this.sttService.createMessagetoChat({message_text:transcription} as any);
       }
       // if end of utterance, let's restart stream
       // this is a small hack to keep restarting the stream on the server and keep the connection with Google API

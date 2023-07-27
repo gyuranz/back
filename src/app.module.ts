@@ -19,6 +19,6 @@ import { GptService } from './room/gpt.service';
     RoomModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,],
 })
 export class AppModule {}

@@ -20,7 +20,7 @@ import { FindService } from './find.service';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService,FindService],
+  providers: [AuthService,FindService,],
   controllers: [AuthController],
   exports: [AuthService,FindService],
 })
