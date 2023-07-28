@@ -59,9 +59,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() chatInputDto: ChatInputDto,
   ) {
     this.socketService.createChat( chatInputDto );
-    console.log(chatInputDto)
-    socket.broadcast.emit('message', { message:chatInputDto });
-    return { message:chatInputDto };
+    socket.broadcast.emit('message', { username: chatInputDto.user_nickname , message:chatInputDto.message });
+    return { username: socket.id, message:chatInputDto };
   }
 
   //! room/에서 join-room 을 보내지 않으니 auth.gateway로 보냄
