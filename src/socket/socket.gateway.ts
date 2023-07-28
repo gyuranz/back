@@ -59,7 +59,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() chatInputDto: ChatInputDto,
   ) {
     this.socketService.createChat( chatInputDto );
-    socket.broadcast.emit('message', { user_nickname: chatInputDto.user_nickname , message:chatInputDto.message });
+    socket.to(chatInputDto.room_id).emit('message', { user_nickname: chatInputDto.user_nickname , message:chatInputDto.message });
     return { user_nickname: chatInputDto.user_nickname , message:chatInputDto.message };
   }
 
@@ -71,9 +71,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() room_id: string,
   ) {
     console.log(room_id);
-    console.log(socket);
     socket.join(room_id); // join room
-    console.log(socket)
+    console.log(socket);
     return { success: true };
   }
 
