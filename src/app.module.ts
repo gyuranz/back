@@ -12,8 +12,8 @@ import { GptService } from './room/gpt.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{name: User.name, schema: UserSchema},{name: Room.name, schema: RoomSchema}]),
-    MongooseModule.forRoot("mongodb+srv://rlaehddbs2238:rlaehddbs123@cluster0.uusqfxm.mongodb.net/?retryWrites=true&w=majority"),
-    // MongooseModule.forRoot("mongodb+srv://gyuranz:0812@localhost:27017/?retryWrites=true&w=majority"),
+    // MongooseModule.forRoot("mongodb+srv://rlaehddbs2238:rlaehddbs123@cluster0.uusqfxm.mongodb.net/?retryWrites=true&w=majority"),
+    MongooseModule.forRoot("mongodb+srv://gyuranz:0812@localhost:27017/?retryWrites=true&w=majority"),
     SttModule,
     AuthModule,
     SocketModule,
