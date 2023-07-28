@@ -10,7 +10,7 @@ export class ChatInputDto {
 
     // 채팅 칠때 프론트에서
     @IsString()
-    username: string;
+    user_nickname: string;
     
     // 채팅 칠때 게이트웨이(stt, socket)에서
     @IsString()
