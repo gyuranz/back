@@ -26,7 +26,7 @@ let createdRooms: string[] = [];
 @WebSocketGateway({
   namespace: `room`,
   cors: {
-    origin: ['https://gotojungle.shop','https://gyuranz-bucket.s3-website.ap-northeast-2.amazonaws.com', 'http://localhost:3000', 'https://15.164.100.230:3000'],
+    origin: ['https://gotojungle.shop','https://gyuranzbucket01.s3-website.ap-northeast-2.amazonaws.com', 'http://localhost:3000', 'https://15.164.100.230:3000'],
   },
 })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -59,8 +59,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() chatInputDto: ChatInputDto,
   ) {
     this.socketService.createChat( chatInputDto );
-    socket.broadcast.emit('message', { username: chatInputDto.user_nickname , message:chatInputDto.message });
-    return { username: chatInputDto.user_nickname , message:chatInputDto.message };
+    socket.broadcast.emit('message', { user_nickname: chatInputDto.user_nickname , message:chatInputDto.message });
+    return { user_nickname: chatInputDto.user_nickname , message:chatInputDto.message };
   }
 
   //! room/에서 join-room 을 보내지 않으니 auth.gateway로 보냄
