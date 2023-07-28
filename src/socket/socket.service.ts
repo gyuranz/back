@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PptDto } from 'src/forms/chat.dto';
+import { ChatInputDto, PptDto } from 'src/forms/chat.dto';
 import { Chat, Ppt } from 'src/forms/schema.schema';
 
 
@@ -17,10 +17,11 @@ export class SocketService {
     // createChat(chat):Promise<Chat>{
     //     return this.chatModel.create(chat);
 
-    createChat(user_nickname, message_text):Promise<Chat>{
+    createChat( chatInputDto:ChatInputDto ):Promise<Chat>{
         const chatdto = {
-            socket_id: user_nickname,
-            message_text: message_text
+            socket_id: chatInputDto.user_nickname,
+            message_text: chatInputDto.message,
+            room_id: chatInputDto.room_id
         }
 
 //         return this.chatModel.create(chat);

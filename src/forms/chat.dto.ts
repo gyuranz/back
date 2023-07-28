@@ -12,13 +12,9 @@ export class ChatInputDto {
     @IsString()
     user_nickname: string;
     
-    // 채팅 칠때 프론트에서
-    @IsString()
-    user_id: string;
-    
     // 채팅 칠때 게이트웨이(stt, socket)에서
     @IsString()
-    chat_text: string;
+    message: string;
 }
 
 export class PptDto {
