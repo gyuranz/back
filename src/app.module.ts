@@ -13,8 +13,7 @@ import { GptService } from './room/gpt.service';
   imports: [
     MongooseModule.forFeature([{name: User.name, schema: UserSchema},{name: Room.name, schema: RoomSchema}]),
     // MongooseModule.forRoot("mongodb+srv://rlaehddbs2238:rlaehddbs123@cluster0.uusqfxm.mongodb.net/?retryWrites=true&w=majority"),
-    MongooseModule.forRoot(process.env.MONGO_URL, {connectionName: 'default'}),
-    MongooseModule.forRoot(process.env.MONGO_URL, {connectionName: 'replica'}),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     SttModule,
     AuthModule,
     SocketModule,
