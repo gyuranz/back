@@ -26,7 +26,7 @@ let createdRooms: string[] = [];
 @WebSocketGateway({
   namespace: `room`,
   cors: {
-    origin: ['https://gotojungle.shop','http://gyuranzbucket01.s3-website.ap-northeast-2.amazonaws.com/', 'http://localhost:3000', 'https://15.164.100.230:3000'],
+    origin: '*',
   },
 })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
