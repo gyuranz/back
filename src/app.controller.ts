@@ -53,7 +53,6 @@ export class AppController {
 
   @Post('/:user_id/create')
   async createNewRoom(@Param ('user_id') user_id:string, @Body() setDto: CreateRoomDto) {
-    console.log("통과");
     return await this.appService.createNewRoom(user_id,setDto);
   }
 

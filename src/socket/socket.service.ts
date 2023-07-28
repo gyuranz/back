@@ -10,20 +10,20 @@ import { Chat, Ppt } from 'src/forms/schema.schema';
 export class SocketService {
     constructor(
         @InjectModel(Chat.name) private chatModel: Model<Chat>,
-        @InjectModel(Ppt.name) private pptModel: Model<Ppt>
+        // @InjectModel(Ppt.name) private pptModel: Model<Ppt>
     ){}
 
 
     // createChat(chat):Promise<Chat>{
     //     return this.chatModel.create(chat);
 
-    createChat(socket_id, message_text):Promise<Ppt>{
-        const pptdto = {
-            socket_id: socket_id,
+    createChat(user_nickname, message_text):Promise<Chat>{
+        const chatdto = {
+            socket_id: user_nickname,
             message_text: message_text
         }
 
 //         return this.chatModel.create(chat);
-        return this.pptModel.create(pptdto);
+        return this.chatModel.create(chatdto);
 //     }
 }}

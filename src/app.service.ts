@@ -99,7 +99,6 @@ export class AppService {
     //비밀번호 4번 해싱
     const hashedPw = bcrypt.hashSync(createRoomDto.room_password, 4);
     const createroomid = this.generateRandomString(6);
-    console.log(createroomid);
     //방을 만들고 필요한 데이터 리턴
     const user = await this.findService.getUserbyId(user_id);
     const input_room_joined_user = { user_id: user.user_id, user_nickname: user.user_nickname };
@@ -115,9 +114,6 @@ export class AppService {
 
       // user_joined_room_list 에 room_id 추가
       user.user_joined_room_list.push(input_user_joined_room);
-      console.log(user);
-      console.log(user_id);
-      console.log(room);
       this.userModel.collection.updateOne({ user_id }, { $set: { user_joined_room_list: user.user_joined_room_list } });
 
 

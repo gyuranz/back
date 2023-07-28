@@ -58,8 +58,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() message: string,
   ) {
-    this.socketService.createChat( socket.id, message );
-    socket.broadcast.emit('message', { username: socket.id, message });
+    this.socketService.createChat( socket.id,message );
+    socket.broadcast.emit('message', { username: socket.id , message });
     return { username: socket.id, message };
   }
 
@@ -70,7 +70,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() room_id: string,
   ) {
+    console.log(room_id);
+    console.log(socket);
     socket.join(room_id); // join room
+    console.log(socket)
     return { success: true };
   }
 
