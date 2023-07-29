@@ -4,17 +4,39 @@ import { IsNumber, IsString, isString } from "class-validator";
 // 방 생성시 유효성 검사
 export class ChatInputDto {
     
-    // 채팅 칠때 프론트에서?
     @IsString()
     room_id: string;
 
-    // 채팅 칠때 프론트에서
     @IsString()
     user_nickname: string;
     
-    // 채팅 칠때 게이트웨이(stt, socket)에서
     @IsString()
     message: string;
+}
+
+export class OfferDto {
+    
+    @IsString()
+    roomName: string;
+    
+    offer: any;
+}
+
+export class AnswerDto {
+    
+    @IsString()
+    roomName: string;
+    
+    answer: any;
+}
+
+export class IcecandidateDto {
+    
+
+    @IsString()
+    roomName: string;
+
+    ice:any;
 }
 
 export class PptDto {

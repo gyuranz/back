@@ -9,7 +9,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Namespace, Socket } from 'socket.io';
-import { ChatInputDto } from 'src/forms/chat.dto';
+import { AnswerDto, ChatInputDto, IcecandidateDto, OfferDto } from 'src/forms/chat.dto';
 import { SocketService } from './socket.service';
 import { FindService } from 'src/auth/find.service';
 
@@ -70,16 +70,14 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() room_id: string,
   ) {
-    console.log(room_id);
-    socket.join(room_id); // join room
-    console.log(socket);
+    socket.to(room_id).emit('join-room', 'welcome')
     return { success: true };
   }
 
   @SubscribeMessage('leave-room')
   handleLeaveRoom(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() room_id: string, user_nickname: string
+    @MessageBody() {room_id,user_nickname} : {room_id: string, user_nickname: string}
   ) {
     socket.leave(room_id); // join room
 
@@ -89,27 +87,24 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('offer')
   handleOfferMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() offer: string,
-    @MessageBody() room_id: string,
+    @MessageBody() offerDto: OfferDto,
   ) {
-    socket.to(room_id).emit('offer', { username: socket.id, offer });
+    socket.to(offerDto.roomName).emit('offer', { username: socket.id, offer:offerDto.offer });
   }
 
   @SubscribeMessage('answer')
   handleAnswerMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() answer: string,
-    @MessageBody() room_id: string,
+    @MessageBody() answerDto: AnswerDto,
   ) {
-      socket.to(room_id).emit('answer', { username: socket.id, answer });
+      socket.to(answerDto.roomName).emit('answer', { username: socket.id, answer:answerDto.answer });
     }
 
-  @SubscribeMessage('icecandidate')
+  @SubscribeMessage('ice')
   handleIceCandidateMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() icecandidate: string,
-    @MessageBody() room_id: string,
+    @MessageBody() icecandidateDto:IcecandidateDto,
   ) {
-    socket.to(room_id).emit('icecandidate', { username: socket.id, icecandidate });
+    socket.to(icecandidateDto.roomName).emit('ice', { username: socket.id, ice:icecandidateDto.i });
   }
 }
