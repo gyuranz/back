@@ -24,7 +24,6 @@ export class User {
 
     @Prop({ type: [{ room_id: String, room_name: String, summary: String }] })
     user_joined_room_list: { room_id: string, room_name: string, summary: string }[];
-
     // @Prop()
     // createUser_Dt: Date;
 }

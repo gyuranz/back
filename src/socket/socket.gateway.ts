@@ -70,6 +70,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() room_id: string,
   ) {
+    socket.join(room_id); // join room
     socket.to(room_id).emit('join-room', 'welcome')
     return { success: true };
   }
