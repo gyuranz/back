@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { RoomController } from './room.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Ppt, PptSchema, STT, STTSchema } from 'src/forms/schema.schema';
 import { ConfigModule } from '@nestjs/config';
 import { GptService } from './gpt.service';
+import { Chat, ChatSchema } from 'src/forms/schema.schema';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: Ppt.name, schema: PptSchema }]),
+        MongooseModule.forFeature([{name:Chat.name, schema:ChatSchema}]),
         ConfigModule.forRoot({
             cache: true,
             isGlobal: true,

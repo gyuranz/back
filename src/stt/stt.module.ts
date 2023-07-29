@@ -5,13 +5,12 @@ import { SttService } from './stt.service';
 import googleCloudConfig from './google-cloud.config';
 // 동윤
 import { MongooseModule } from '@nestjs/mongoose';
-import { Chat, ChatSchema, Ppt, PptSchema, STT, STTSchema } from 'src/forms/schema.schema';
+import { Chat, ChatSchema, STT, STTSchema } from 'src/forms/schema.schema';
 
 @Module({
   imports: [
     // 동윤
     MongooseModule.forFeature([{name: STT.name, schema: STTSchema}]),
-    MongooseModule.forFeature([{name: Ppt.name, schema: PptSchema}]),
     MongooseModule.forFeature([{name: Chat.name, schema: ChatSchema}]),
     ConfigModule.forRoot({
     load: [googleCloudConfig]

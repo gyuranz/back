@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { SpeechClient } from '@google-cloud/speech';
 import { ConfigService } from '@nestjs/config';
-import { Chat, Ppt, STT, STTSchema } from 'src/forms/schema.schema';
+import { Chat } from 'src/forms/schema.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Readable } from 'stream';
 import { Model } from 'mongoose';
 
 
@@ -13,8 +12,6 @@ export class SttService {
   
   constructor(
     private readonly configService: ConfigService,
-    // @InjectModel(STT.name) private sttModel: Model<STT>,
-    // @InjectModel(Ppt.name) private pptModel: Model<Ppt>,
     @InjectModel(Chat.name) private chatModel: Model<Chat>,
     ) {
     this.speechClient = new SpeechClient({
@@ -26,12 +23,4 @@ export class SttService {
   createMessagetoChat(stt: string): Promise<Chat> {
     return this.chatModel.create(stt);
   }
-  /**
-  * 메시지를 저장해주는 함수. (string만 들어올 수 있음)*/
-  // createMessage(stt: string): Promise<STT> {
-  //   return this.sttModel.create(stt);
-  // }
-  // createMessagetoChat(stt: string): Promise<Ppt> {
-  //   return this.pptModel.create(stt);
-  // }
 }

@@ -7,17 +7,6 @@ import { Timestamp } from "mongodb";
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
-export class Ppt{
-    @Prop()
-    socket_id: string;
-    
-    @Prop()
-    message_text: string;
-    
-    @Prop({default:Date.now})
-    creatAt:Date;
-}
 
 @Schema()
 export class User {
@@ -88,8 +77,6 @@ export class Chat{
     // @Prop({type: [{user_nickname:String, user_id:String, message_id:String, message_text:String, message_creatAt:Date}], default: []})
     // realtime_chat: {user_nickname:string, user_id:string, message_id:string, message_text:string, message_creatAt:Date}[];
 }
-
-export const PptSchema = SchemaFactory.createForClass(Ppt);
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
 export const ChatSchema = SchemaFactory.createForClass(Chat);
