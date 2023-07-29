@@ -63,6 +63,30 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return { username: socket.id, message };
   }
 
+  @SubscribeMessage('offer')
+  handleOfferMessage(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() offer: string,
+  ) {
+    socket.broadcast.emit('offer', { username: socket.id, offer });
+  }
+
+  @SubscribeMessage('answer')
+  handleAnswerMessage(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() answer: string,
+  ) {
+      socket.broadcast.emit('answer', { username: socket.id, answer });
+    }
+
+  @SubscribeMessage('icecandidate')
+  handleIceCandidateMessage(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() icecandidate: string,
+  ) {
+    socket.broadcast.emit('icecandidate', { username: socket.id, icecandidate });
+  }
+
   //! room/에서 join-room 을 보내지 않으니 auth.gateway로 보냄
   // //시작할 때 한번 'join-room', room_id 보내주어야 함.
   @SubscribeMessage('join-room')
