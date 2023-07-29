@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { GptService } from './gpt.service';
 import { Chat, ChatSchema } from 'src/forms/schema.schema';
+import { OcrService } from './ocr.service';
 
 @Module({
     imports: [
@@ -14,7 +15,7 @@ import { Chat, ChatSchema } from 'src/forms/schema.schema';
           }),
     ],
     controllers: [RoomController],
-    providers:[GptService],
+    providers:[GptService, OcrService],
 })
 export class RoomModule { }
 

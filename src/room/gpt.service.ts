@@ -56,4 +56,14 @@ export class GptService {
     async generateText(prompt: string): Promise<string> {
         return this.generateTextGPT3(prompt);
     }
+
+    
+    // async findFromSummaryDB() {
+    //     const result = await this.summModel.find({}, 'summary');
+    //     let extractResult = result.map((data) => data.summary);
+    //     let summarytoArray = extractResult[0].split(".");
+    //     console.log(typeof summarytoArray);
+    //     console.log(summarytoArray);
+    //     return {'summary':summarytoArray}
+    // }
 }

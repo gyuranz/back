@@ -15,8 +15,8 @@ export class SttService {
     @InjectModel(Chat.name) private chatModel: Model<Chat>,
     ) {
     this.speechClient = new SpeechClient({
-      projectId : this.configService.get<string>('googleCloudConfig.projectId'),
-      keyFilename: this.configService.get<string>('googleCloudConfig.keyFilename'),
+      projectId : this.configService.get<string>(process.env.PROJECT_ID),
+      keyFilename: this.configService.get<string>(process.env.KEY_FILE_NAME),
     });
   }
 

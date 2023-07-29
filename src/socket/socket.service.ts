@@ -18,8 +18,8 @@ export class SocketService {
 
     createChat( chatInputDto:ChatInputDto ):Promise<Chat>{
         const chatdto = {
-            socket_id: chatInputDto.user_nickname,
-            message_text: chatInputDto.message,
+            user_nickname: chatInputDto.user_nickname,
+            chat_text: chatInputDto.message,
             room_id: chatInputDto.room_id
         }
 
