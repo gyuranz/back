@@ -88,6 +88,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleOfferMessage(
     @ConnectedSocket() socket: Socket,
     @MessageBody() offerDto: OfferDto,
+
   ) {
     socket.to(offerDto.roomName).emit('offer', { username: socket.id, offer:offerDto.offer });
   }
@@ -105,6 +106,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() icecandidateDto:IcecandidateDto,
   ) {
-    socket.to(icecandidateDto.roomName).emit('ice', { username: socket.id, ice:icecandidateDto.i });
+    socket.to(icecandidateDto.roomName).emit('ice', { username: socket.id, ice:icecandidateDto.ice });
   }
 }

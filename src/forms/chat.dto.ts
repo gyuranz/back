@@ -39,12 +39,3 @@ export class IcecandidateDto {
     ice:any;
 }
 
-export class PptDto {
-    
-    @IsString()
-    socket_id: string;
-    
-
-    @IsString()
-    message_text: string;
-}
