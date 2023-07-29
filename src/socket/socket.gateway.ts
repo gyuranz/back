@@ -85,4 +85,31 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     return { success: true };
   }
+
+  @SubscribeMessage('offer')
+  handleOfferMessage(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() offer: string,
+    @MessageBody() room_id: string,
+  ) {
+    socket.to(room_id).emit('offer', { username: socket.id, offer });
+  }
+
+  @SubscribeMessage('answer')
+  handleAnswerMessage(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() answer: string,
+    @MessageBody() room_id: string,
+  ) {
+      socket.to(room_id).emit('answer', { username: socket.id, answer });
+    }
+
+  @SubscribeMessage('icecandidate')
+  handleIceCandidateMessage(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() icecandidate: string,
+    @MessageBody() room_id: string,
+  ) {
+    socket.to(room_id).emit('icecandidate', { username: socket.id, icecandidate });
+  }
 }
