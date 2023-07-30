@@ -78,9 +78,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('leave-room')
   handleLeaveRoom(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() {room_id,user_nickname} : {room_id: string, user_nickname: string}
+    @MessageBody() {room_id} : {room_id: string}
   ) {
-    socket.leave(room_id); // join room
+    console.log(room_id);
+    socket.leave(room_id); // leave room
 
     return { success: true };
   }
