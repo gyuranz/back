@@ -3,8 +3,8 @@ import { Twilio } from 'twilio';
 
 @Injectable()
 export class TwilioService {
-    private readonly accountSid = 'AC2cdb76fd55274a0c9181d8320f0a061e';
-    private readonly authToken = '83db818ae43ff3ad9f5b25c77deccafc';
+    private readonly accountSid = process.env.TWILO_ACCOUNT_SID;
+    private readonly authToken = process.env.TWILO_AUTH_TOKEN;
     private readonly twilioClient: Twilio;
 
     constructor() {

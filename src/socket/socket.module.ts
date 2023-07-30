@@ -5,8 +5,6 @@ import { SocketService } from './socket.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Chat, ChatSchema, Room, RoomSchema, User, UserSchema } from 'src/forms/schema.schema';
 import { FindService } from 'src/auth/find.service';
-import { TurnController } from './socket.controller';
-import { TwilioService } from './twilio.service';
 
 @Module({
   imports: [
@@ -14,7 +12,6 @@ import { TwilioService } from './twilio.service';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }, { name: Room.name, schema: RoomSchema }]),
     ConfigModule.forRoot(),
   ],
-  providers: [SocketGateway, SocketService, FindService, TwilioService],
-  controllers: [TurnController],
+  providers: [SocketGateway, SocketService, FindService],
 })
 export class SocketModule { }

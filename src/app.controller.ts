@@ -2,10 +2,46 @@ import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { AppService } from './app.service';
 import { User } from './forms/schema.schema';
 import { CreateRoomDto, JoinRoomDto } from './forms/room.dto'
+import { TwilioService } from './twilio.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService,
+    private readonly twilioService:TwilioService) { }
+
+  @Get('/room/:room_id')
+  async joinRoom(@Body('user_id') user_id: string, @Param('room_id') room_id: string) {
+    return await this.appService.permissionUsertoRoom(user_id, room_id);
+  }
+
+  @Get('/:user_id/')
+  async mainpage(@Param('user_id') user_id: string) {
+    return await this.appService.getUserInfoforMain(user_id);
+  }
+  
+  @Post('/:user_id/join')
+  async joinNewRoom(@Param ('user_id') user_id:string,@Body() setDto: JoinRoomDto) {
+    return await this.appService.joinNewRoom(user_id, setDto)
+  }
+
+
+  @Post('/:user_id/create')
+  async createNewRoom(@Param ('user_id') user_id:string, @Body() setDto: CreateRoomDto) {
+    return await this.appService.createNewRoom(user_id,setDto);
+  }
+
+  @Get('get-turn-credentials')
+  async getTurnCredentials() {
+    try {
+      const token = await this.twilioService.generateToken();
+      return { token };
+    } catch (err) {
+      console.log('Error occurred when fetching turn server credentials');
+      console.log(err);
+      return { token: null };
+    }
+  }
+}
 
 
  // @Get('/:user_id/finished')
@@ -35,25 +71,3 @@ export class AppController {
     * ! 리턴해줘야 하는 값, 
     * ! 1. 
    */
-  @Get('/room/:room_id')
-  async joinRoom(@Body('user_id') user_id: string, @Param('room_id') room_id: string) {
-    return await this.appService.permissionUsertoRoom(user_id, room_id);
-  }
-
-  @Get('/:user_id/')
-  async mainpage(@Param('user_id') user_id: string) {
-    return await this.appService.getUserInfoforMain(user_id);
-  }
-  
-  @Post('/:user_id/join')
-  async joinNewRoom(@Param ('user_id') user_id:string,@Body() setDto: JoinRoomDto) {
-    return await this.appService.joinNewRoom(user_id, setDto)
-  }
-
-
-  @Post('/:user_id/create')
-  async createNewRoom(@Param ('user_id') user_id:string, @Body() setDto: CreateRoomDto) {
-    return await this.appService.createNewRoom(user_id,setDto);
-  }
-
-}

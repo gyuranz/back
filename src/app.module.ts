@@ -12,6 +12,7 @@ import { S3Module } from './s3/s3.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { S3 } from 'aws-sdk';
 import { S3Service } from './s3/s3.service';
+import { TwilioService } from './twilio.service';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { S3Service } from './s3/s3.service';
     MulterModule.register(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,TwilioService],
 })
 export class AppModule {}
