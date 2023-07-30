@@ -14,11 +14,12 @@ export class OcrService {
   this.client = new ImageAnnotatorClient(configuration);
   }
 
-  async textExtractionFromImage() {
-    const [ result ] = await this.client.textDetection(`text_sample3.jpeg`);
+  async textExtractionFromImage(imgUrl:string) {
+    // const [ result ] = await this.client.textDetection(`text_sample3.jpeg`);
+    const [result]= await this.client.textDetection(imgUrl);
     const detections = result.textAnnotations;
     // console.log('Text: ');
-    console.log(detections[0].description);
+    // console.log(detections[0].description);
     return detections[0].description;
   }
 }
