@@ -1,13 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { GptService } from './gpt.service';
 import { OcrService } from './ocr.service';
+import { RoomService } from './room.service';
 
 @Controller('room')
 export class RoomController {
     constructor(
-        private gptService:GptService,
-        private readonly ocrService: OcrService
-        ){}
+        private gptService: GptService,
+        private readonly roomService: RoomService
+    ) { }
     @Get(`:room_id/summary`)
     async findFromDB() {
         console.log('도착1');
@@ -18,6 +19,17 @@ export class RoomController {
         const prompt = await this.gptService.findFromDB();
         // prompt(stt_message를 전부 합침)를 GPT에 보내서, 그 결과를 반환
         return await this.gptService.generateText(prompt);
+    }
+
+    @Get(':roomId')
+    async checkRoomExists(@Param('roomId') roomId: string) {
+        const roomExists = await this.roomService.checkRoomExists(roomId);
+        if (roomExists) {
+            const isFull = await this.roomService.isRoomFull(roomId);
+            return { roomExists: true, full: isFull };
+        } else {
+            return { roomExists: false };
+        }
     }
     // @Get(`:room_id/summary`)
     // textExtraction() {

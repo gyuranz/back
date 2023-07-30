@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GptService } from './gpt.service';
 import { Chat, ChatSchema, Summ, SummSchema } from 'src/forms/schema.schema';
 import { OcrService } from './ocr.service';
+import { RoomService } from './room.service';
 
 @Module({
     imports: [
@@ -15,7 +16,7 @@ import { OcrService } from './ocr.service';
           }),
     ],
     controllers: [RoomController],
-    providers:[GptService, OcrService],
+    providers:[GptService, OcrService, RoomService],
 })
 export class RoomModule { }
 
