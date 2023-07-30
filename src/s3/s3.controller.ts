@@ -16,9 +16,11 @@ import { S3Service } from './s3.service';
     @Post('')
     @UseInterceptors(FileInterceptor('file'))
     async uploadFile(@UploadedFile() file: Express.Multer.File) {
+      const test= await this.awsS3Service.consoleKey();
       const imageUrl = await this.awsS3Service.uploadFileToS3(file);
-      const savedImage = await this.awsS3Service.create(imageUrl);
 
+      const savedImage = await this.awsS3Service.create(imageUrl);
+      console.log(savedImage)
       return savedImage;
     }
   }

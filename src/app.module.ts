@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Room, RoomSchema, S3Schema, User, UserSchema } from './forms/schema.schema';
+import { Room, RoomSchema, User, UserSchema } from './forms/schema.schema';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SttModule } from './stt/stt.module';

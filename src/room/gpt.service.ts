@@ -3,7 +3,7 @@ import { Configuration, OpenAIApi } from 'openai';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Chat } from 'src/forms/schema.schema';
+import { Chat, Summ } from 'src/forms/schema.schema';
 
 
 @Injectable()
@@ -11,10 +11,12 @@ export class GptService {
     openai: OpenAIApi;
     constructor(
         private readonly configService: ConfigService,
-        @InjectModel(Chat.name) private chatModel: Model<Chat>) {
+        @InjectModel(Chat.name) private chatModel: Model<Chat>,
+        @InjectModel(Summ.name) private summModel: Model<Summ>,
+        ) {
         const configuration = new Configuration({
-            organization: this.configService.get<string>('OPENAI_ORGANIZATION'),
-            apiKey: this.configService.get<string>('CHATGPT_OPEN_API_KEY')
+            organization: this.configService.get<string>(`OPENAI_ORGANIZATION`),
+            apiKey: this.configService.get<string>(`CHATGPT_OPEN_API_KEY`)
         })
         this.openai = new OpenAIApi(configuration);
     }
@@ -31,6 +33,7 @@ export class GptService {
                 max_tokens: 10000,
                 temperature: 1
             })
+            console.log(response.data.choices[0].message.content);
             return response.data.choices[0].message.content
         } catch (error) {
             console.log(error)
@@ -59,12 +62,12 @@ export class GptService {
     }
 
     
-    // async findFromSummaryDB() {
-    //     const result = await this.summModel.find({}, 'summary');
-    //     let extractResult = result.map((data) => data.summary);
-    //     let summarytoArray = extractResult[0].split(".");
-    //     console.log(typeof summarytoArray);
-    //     console.log(summarytoArray);
-    //     return {'summary':summarytoArray}
-    // }
+    async findFromSummaryDB() {
+        const result = await this.summModel.find({}, 'summary');
+        let extractResult = result.map((data) => data.summary);
+        let summarytoArray = extractResult[0].split(".");
+        console.log(typeof summarytoArray);
+        console.log(summarytoArray);
+        return {'summary':summarytoArray}
+    }
 }

@@ -43,11 +43,18 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }, 1000);
   }
 
+  // @SubscribeMessage('startGoogleCloudStream')
+  // async handleStartGoogleCloudStream(client: Socket, @MessageBody() data: any) {
+  //   // this.startRecognitionStream(client, data);
+  //   this.startRecognitionStream(this.server);
+  // }
+  //! 임시변경됨
   @SubscribeMessage('startGoogleCloudStream')
-  async handleStartGoogleCloudStream(client: Socket, @MessageBody() data: any) {
+  async handleStartGoogleCloudStream(client: Socket, @MessageBody() {message,room_id,user_nickname}:{message: string, room_id:string, user_nickname:string}) {
     // this.startRecognitionStream(client, data);
-    this.startRecognitionStream(this.server);
+    this.startRecognitionStream(this.server, room_id, user_nickname);
   }
+
 
   @SubscribeMessage('endGoogleCloudStream')
   handleEndGoogleCloudStream() {
@@ -61,6 +68,9 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ): Promise<void> {
     this.server.emit('receive_message', 'Got audio data');
     if (this.recognizeStream !== null) {
+
+
+
       try {
         this.recognizeStream.write(audioData.audio);
       } catch (err) {
@@ -74,67 +84,69 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private recognizeStream = null;
 
 
-  private async startRecognitionStream(client: Socket) {
-  console.log('* StartRecognitionStream\n');
-  const encoding = 'LINEAR16';
-  const sampleRateHertz = 16000;
-  const languageCode = 'ko-KR';
-  const request = {
-    config: {
-      encoding,
-      sampleRateHertz,
-      languageCode,
-      enableWordTimeOffsets: true,
-      enableAutomaticPunctuation: true,
-      enableWordConfidence: true,
-      enableSpeakerDiarization: true,
-      model: 'command_and_search',
-      useEnhanced: true,
-    },
-    interimResults: true,
-  };
-  try {
-    // this.recognizeStream = await this.appService.getRecognitionStream();
-    this.recognizeStream = this.sttService.speechClient
-    .streamingRecognize(request as any)
-    .on('error', console.error)
+  private async startRecognitionStream(client: Socket,room_id:string, user_nickname:string) {
+    console.log('* StartRecognitionStream\n');
+    const encoding = 'LINEAR16';
+    const sampleRateHertz = 16000;
+    const languageCode = 'ko-KR';
+    const request = {
+      config: {
+        encoding,
+        sampleRateHertz,
+        languageCode,
+        enableWordTimeOffsets: true,
+        enableAutomaticPunctuation: true,
+        enableWordConfidence: true,
+        enableSpeakerDiarization: true,
+        model: 'command_and_search',
+        useEnhanced: true,
+      },
+      interimResults: true,
+    };
+    try {
+      // this.recognizeStream = await this.appService.getRecognitionStream();
+      this.recognizeStream = this.sttService.speechClient
+        .streamingRecognize(request as any)
+        .on('error', console.error)
 
-    // console.log(this.recognizeStream);   done
-    // this.recognizeStream.on('error', console.errorㅛ);
-    // this.recognizeStream.on('data', (data: any) => {
-    .on("data", (data:any) =>{  
-      const result = data.results[0];
-      const isFinal = result.isFinal;
-      const transcription = data.results
-        .map((result: any) => result.alternatives[0].transcript)
-        .join('\n');
+        // console.log(this.recognizeStream);   done
+        // this.recognizeStream.on('error', console.errorㅛ);
+        // this.recognizeStream.on('data', (data: any) => {
+        .on("data", (data: any) => {
+          const result = data.results[0];
+          const isFinal = result.isFinal;
+          const transcription = data.results
+            .map((result: any) => result.alternatives[0].transcript)
+            .join('\n');
 
 
-      console.log(`Transcription: `, transcription);
+          console.log(`Transcription: `, transcription);
 
-      client.emit('receive_audio_text', {
-        text: transcription,
-        isFinal: isFinal,
-      });
-      if(isFinal){
-        // DB에 저장하는 코드
-        // this.sttService.createMessage({stt_message:transcription} as any);
-        
-        this.sttService.createMessagetoChat({message_text:transcription} as any);
-      }
-      // if end of utterance, let's restart stream
-      // this is a small hack to keep restarting the stream on the server and keep the connection with Google API
-      // Google API disconnects the stream every five minutes
-      if (data.results[0] && data.results[0].isFinal) {
-        this.stopRecognitionStream();
-        this.startRecognitionStream(this.server);
-        console.log('restarted stream serverside');
-      }
-    });
-  } catch (err) {
-    console.error('Error streaming google api ' + err);
+          client.to(room_id).emit('receive_audio_text', {
+            text: transcription,
+            isFinal: isFinal,
+            room_id,
+            user_nickname
+          });
+          if (isFinal) {
+            // DB에 저장하는 코드
+            // this.sttService.createMessage({stt_message:transcription} as any);
+
+            this.sttService.createMessagetoChat({ message: transcription ,room_id, user_nickname } as any);
+          }
+          // if end of utterance, let's restart stream
+          // this is a small hack to keep restarting the stream on the server and keep the connection with Google API
+          // Google API disconnects the stream every five minutes
+          if (data.results[0] && data.results[0].isFinal) {
+            this.stopRecognitionStream();
+            this.startRecognitionStream(this.server,room_id, user_nickname);
+            console.log('restarted stream serverside');
+          }
+        });
+    } catch (err) {
+      console.error('Error streaming google api ' + err);
+    }
   }
-}
 
 
   private stopRecognitionStream() {

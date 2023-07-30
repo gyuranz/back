@@ -41,7 +41,7 @@ export class Room {
 
     @Prop()
     room_summary: string;
-    
+
     @Prop()
     entire_chat: string;
 
@@ -51,42 +51,45 @@ export class Room {
 
 
 @Schema()
-export class Chat{
-    
-    @Prop()
-    room_id:string;
-    
-    @Prop()
-    user_nickname:string;
-    
-    @Prop()
-    message:string;
+export class Chat {
 
     @Prop()
-    img_metadata:string;
-    
-    @Prop({default:Date.now})
-    chat_creatAt:Date;
-    
+    room_id: string;
+
+    @Prop()
+    user_nickname: string;
+
+    @Prop()
+    message: string;
+
+    @Prop()
+    img_metadata: string;
+
+    @Prop({ default: Date.now })
+    chat_creatAt: Date;
+
     // @Prop({type: [{user_nickname:String, user_id:String, message_id:String, message_text:String, message_creatAt:Date}], default: []})
     // realtime_chat: {user_nickname:string, user_id:string, message_id:string, message_text:string, message_creatAt:Date}[];
 }
 
 @Schema()
-export class STT{
+export class Summ {
     @Prop()
-    stt_message: string;
+    summary: string;
 }
 
 @Schema()
-export class S3 {
-  @Prop({ required: true })
-  imageUrl: string;
+export class S3toDB {
+    @Prop({ required: true })
+    imageUrl: string;
+
+    @Prop({ default: Date.now })
+    img_creatAt: Date;
 }
 
+export const SummSchema = SchemaFactory.createForClass(Summ);
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
 export const ChatSchema = SchemaFactory.createForClass(Chat);
-export const S3Schema = SchemaFactory.createForClass(S3);
-export const STTSchema = SchemaFactory.createForClass(STT);
-export type ImageDocument = S3 & Document;
+export const S3toDBSchema = SchemaFactory.createForClass(S3toDB);
+export type ImageDocument = S3toDB & Document;
