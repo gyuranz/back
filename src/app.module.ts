@@ -1,13 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Room, RoomSchema, User, UserSchema } from './forms/schema.schema';
+import { Room, RoomSchema, S3Schema, User, UserSchema } from './forms/schema.schema';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { SttModule } from './stt/stt.module';
 import { SocketModule } from './socket/socket.module';
 import { RoomModule } from './room/room.module';
 import { GptService } from './room/gpt.service';
+import { S3Module } from './s3/s3.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { S3 } from 'aws-sdk';
+import { S3Service } from './s3/s3.service';
 
 @Module({
   imports: [
@@ -18,8 +22,10 @@ import { GptService } from './room/gpt.service';
     AuthModule,
     SocketModule,
     RoomModule,
+    S3Module,
+    MulterModule.register(),
   ],
   controllers: [AppController],
-  providers: [AppService,],
+  providers: [AppService],
 })
 export class AppModule {}

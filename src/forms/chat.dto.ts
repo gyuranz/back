@@ -12,6 +12,9 @@ export class ChatInputDto {
     
     @IsString()
     message: string;
+
+    @IsString()
+    img_metadata:string;
 }
 
 export class OfferDto {

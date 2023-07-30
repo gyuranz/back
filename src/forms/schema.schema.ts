@@ -49,26 +49,21 @@ export class Room {
     room_joined_user_list: { user_id: string; user_nickname: string }[];
 }
 
-@Schema()
-export class STT{
-    @Prop()
-    stt_message: string;
-}
 
 @Schema()
 export class Chat{
-
+    
     @Prop()
     room_id:string;
-
+    
     @Prop()
     user_nickname:string;
     
     @Prop()
-    chat_id:string;
-    
+    message:string;
+
     @Prop()
-    chat_text:string;
+    img_metadata:string;
     
     @Prop({default:Date.now})
     chat_creatAt:Date;
@@ -76,7 +71,22 @@ export class Chat{
     // @Prop({type: [{user_nickname:String, user_id:String, message_id:String, message_text:String, message_creatAt:Date}], default: []})
     // realtime_chat: {user_nickname:string, user_id:string, message_id:string, message_text:string, message_creatAt:Date}[];
 }
+
+@Schema()
+export class STT{
+    @Prop()
+    stt_message: string;
+}
+
+@Schema()
+export class S3 {
+  @Prop({ required: true })
+  imageUrl: string;
+}
+
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
 export const ChatSchema = SchemaFactory.createForClass(Chat);
+export const S3Schema = SchemaFactory.createForClass(S3);
 export const STTSchema = SchemaFactory.createForClass(STT);
+export type ImageDocument = S3 & Document;

@@ -40,15 +40,16 @@ export class GptService {
 
     async findFromDB() {
         // prompt는 요약, 퀴즈, 질문 마다 다르게 하면 될듯 
+        console.log('도착2');
         let prompt = "이 다음에 나오는 글을 5줄로 요약해줘 \n";
         // 이거 발표용 DB 스키마 로 수정해야됌
-        const result = await this.chatModel.find({}, 'message_text');
-        const extractResult = result.map((data) => data.chat_text);
-        // for (let elem of extractResult) {
-        //     prompt += elem;
-        // }
-        prompt += extractResult[0];
-        prompt += extractResult[1];
+        const result = await this.chatModel.find({}, 'message');
+        const extractResult = result.map((data) => data.message);
+        for (let elem of extractResult) {
+            prompt += elem;
+        }
+        // prompt += extractResult[0];
+        // prompt += extractResult[1];
         console.log(prompt)
         return prompt;
     }

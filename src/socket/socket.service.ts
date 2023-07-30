@@ -16,14 +16,9 @@ export class SocketService {
     // createChat(chat):Promise<Chat>{
     //     return this.chatModel.create(chat);
 
-    createChat( chatInputDto:ChatInputDto ):Promise<Chat>{
-        const chatdto = {
-            user_nickname: chatInputDto.user_nickname,
-            chat_text: chatInputDto.message,
-            room_id: chatInputDto.room_id
-        }
+    createChat( chatDto:ChatInputDto ):Promise<Chat>{
 
 //         return this.chatModel.create(chat);
-        return this.chatModel.create(chatdto);
+        return this.chatModel.create(chatDto);
 //     }
 }}
