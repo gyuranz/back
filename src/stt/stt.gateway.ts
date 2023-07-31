@@ -1,4 +1,3 @@
-
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -6,13 +5,12 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   MessageBody,
-  ConnectedSocket
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io'; // Server
 import { SttService } from './stt.service';
-// , methods: ['GET', 'POST'] 
+// , methods: ['GET', 'POST']
 @WebSocketGateway({
-  namespace: 'room',
   cors: {
     origin: '*',
   },
@@ -21,8 +19,7 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Socket;
 
-
-  constructor(private readonly sttService: SttService) { }
+  constructor(private readonly sttService: SttService) {}
 
   // afterInit() {}
 
@@ -50,11 +47,18 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // }
   //! 임시변경됨
   @SubscribeMessage('startGoogleCloudStream')
-  async handleStartGoogleCloudStream(client: Socket, @MessageBody() { message, room_id, user_nickname }: { message: string, room_id: string, user_nickname: string }) {
+  async handleStartGoogleCloudStream(
+    client: Socket,
+    @MessageBody()
+    {
+      message,
+      room_id,
+      user_nickname,
+    }: { message: string; room_id: string; user_nickname: string },
+  ) {
     // this.startRecognitionStream(client, data);
     this.startRecognitionStream(this.server, room_id, user_nickname);
   }
-
 
   @SubscribeMessage('endGoogleCloudStream')
   handleEndGoogleCloudStream() {
@@ -68,9 +72,6 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ): Promise<void> {
     this.server.emit('receive_message', 'Got audio data');
     if (this.recognizeStream !== null) {
-
-
-
       try {
         this.recognizeStream.write(audioData.audio);
       } catch (err) {
@@ -83,8 +84,11 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private recognizeStream = null;
 
-  
-  private async startRecognitionStream(client: Socket, room_id: string, user_nickname: string) {
+  private async startRecognitionStream(
+    client: Socket,
+    room_id: string,
+    user_nickname: string,
+  ) {
     console.log('* StartRecognitionStream\n');
     const encoding = 'LINEAR16';
     const sampleRateHertz = 16000;
@@ -113,7 +117,7 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
         // console.log(this.recognizeStream);   done
         // this.recognizeStream.on('error', console.errorㅛ);
         // this.recognizeStream.on('data', (data: any) => {
-        .on("data", (data: any) => {
+        .on('data', (data: any) => {
           const result = data.results[0];
           console.log(data);
           const isFinal = result.isFinal; //말이 끊겼을때 stt 작업 멈추고 transcription 을 리턴해줌
@@ -121,26 +125,29 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
             .map((result: any) => result.alternatives[0].transcript)
             .join('\n');
 
-
           console.log(`Transcription: `, transcription);
-          
+
           // 방에 있는 유저들에게 transcription 결과물 보내줌
           client.to(room_id).emit('receive_audio_text', {
             text: transcription,
             isFinal: isFinal,
             room_id,
-            user_nickname
+            user_nickname,
           });
           if (isFinal) {
             // DB에 저장하는 코드
             // this.sttService.createMessage({stt_message:transcription} as any);
-            this.sttService.createMessagetoChat({ message: transcription, room_id, user_nickname } as any);
+            this.sttService.createMessagetoChat({
+              message: transcription,
+              room_id,
+              user_nickname,
+            } as any);
           }
-          
+
           if (data.results[0] && data.results[0].isFinal) {
             //오랫동안 음성감지가 되지 않았을 때 자동으로 stt종료
             this.stopRecognitionStream();
-            
+
             //말이 끊긴 이후 다시 음성을 감지해서 stt 작업을 반복.
             this.startRecognitionStream(this.server, room_id, user_nickname);
             console.log('restarted stream serverside');
