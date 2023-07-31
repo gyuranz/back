@@ -21,7 +21,7 @@ export class RoomController {
     return await this.gptService.generateText(prompt);
   }
 
-  @Get('/:roomId')
+  @Get('/api/:roomId')
   async checkRoomExists(@Param() { roomId }) {
     console.log(roomId);
     const roomExists = await this.roomService.checkRoomExists(roomId);

@@ -177,6 +177,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() chatInputDto: ChatInputDto,
   ) {
     this.socketService.createChat(chatInputDto);
+    console.log(chatInputDto);
     socket.to(chatInputDto.room_id).emit('message', {
       user_nickname: chatInputDto.user_nickname,
       message: chatInputDto.message,
