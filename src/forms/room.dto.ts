@@ -8,12 +8,6 @@ export class CreateRoomDto {
 
     @IsString()
     room_password: string;
-
-    @IsString()
-    room_id: string;
-
-    @IsString()
-    room_summary: string;
 }
 
 // 방 조인시 유효성 검사
