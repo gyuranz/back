@@ -89,9 +89,9 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   createNewRoomHandler(@MessageBody() data, @ConnectedSocket() socket: Socket) {
     console.log('host is creating new room');
     console.log(data);
-    const { identity, onlyAudio } = data;
+    const { identity, onlyAudio, sixRoomId } = data;
 
-    const roomId = uuidv4();
+    const roomId = sixRoomId;
     console.log(roomId);
     // create new user
     const newUser = {
