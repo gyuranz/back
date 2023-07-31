@@ -83,4 +83,3 @@ export const SummSchema = SchemaFactory.createForClass(Summ);
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
 export const ChatSchema = SchemaFactory.createForClass(Chat);
-

@@ -50,7 +50,7 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // }
   //! 임시변경됨
   @SubscribeMessage('startGoogleCloudStream')
-  async handleStartGoogleCloudStream(client: Socket, @MessageBody() {message,room_id,user_nickname}:{message: string, room_id:string, user_nickname:string}) {
+  async handleStartGoogleCloudStream(client: Socket, @MessageBody() { message, room_id, user_nickname }: { message: string, room_id: string, user_nickname: string }) {
     // this.startRecognitionStream(client, data);
     this.startRecognitionStream(this.server, room_id, user_nickname);
   }
@@ -83,12 +83,13 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private recognizeStream = null;
 
-
-  private async startRecognitionStream(client: Socket,room_id:string, user_nickname:string) {
+  
+  private async startRecognitionStream(client: Socket, room_id: string, user_nickname: string) {
     console.log('* StartRecognitionStream\n');
     const encoding = 'LINEAR16';
     const sampleRateHertz = 16000;
     const languageCode = 'ko-KR';
+    //인코딩 정보
     const request = {
       config: {
         encoding,
@@ -114,14 +115,16 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
         // this.recognizeStream.on('data', (data: any) => {
         .on("data", (data: any) => {
           const result = data.results[0];
-          const isFinal = result.isFinal;
-          const transcription = data.results
+          console.log(data);
+          const isFinal = result.isFinal; //말이 끊겼을때 stt 작업 멈추고 transcription 을 리턴해줌
+          const transcription = data.results // stt 결과물
             .map((result: any) => result.alternatives[0].transcript)
             .join('\n');
 
 
           console.log(`Transcription: `, transcription);
-
+          
+          // 방에 있는 유저들에게 transcription 결과물 보내줌
           client.to(room_id).emit('receive_audio_text', {
             text: transcription,
             isFinal: isFinal,
@@ -131,15 +134,15 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
           if (isFinal) {
             // DB에 저장하는 코드
             // this.sttService.createMessage({stt_message:transcription} as any);
-
-            this.sttService.createMessagetoChat({ message: transcription ,room_id, user_nickname } as any);
+            this.sttService.createMessagetoChat({ message: transcription, room_id, user_nickname } as any);
           }
-          // if end of utterance, let's restart stream
-          // this is a small hack to keep restarting the stream on the server and keep the connection with Google API
-          // Google API disconnects the stream every five minutes
+          
           if (data.results[0] && data.results[0].isFinal) {
+            //오랫동안 음성감지가 되지 않았을 때 자동으로 stt종료
             this.stopRecognitionStream();
-            this.startRecognitionStream(this.server,room_id, user_nickname);
+            
+            //말이 끊긴 이후 다시 음성을 감지해서 stt 작업을 반복.
+            this.startRecognitionStream(this.server, room_id, user_nickname);
             console.log('restarted stream serverside');
           }
         });
@@ -148,7 +151,7 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-
+  //종료신호를 받았을 때 stt 종료
   private stopRecognitionStream() {
     if (this.recognizeStream) {
       console.log('* StopRecognitionStream \n');
