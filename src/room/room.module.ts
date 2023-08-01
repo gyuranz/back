@@ -6,6 +6,7 @@ import { GptService } from './gpt.service';
 import { Chat, ChatSchema, Summary, SummarySchema } from 'src/forms/schema.schema';
 import { OcrService } from './ocr.service';
 import { RoomService } from './room.service';
+import { S3Service } from './s3.service';
 
 @Module({
     imports: [
@@ -16,7 +17,7 @@ import { RoomService } from './room.service';
           }),
     ],
     controllers: [RoomController],
-    providers:[GptService, OcrService, RoomService],
+    providers:[GptService, OcrService, RoomService, S3Service],
 })
 export class RoomModule { }
 

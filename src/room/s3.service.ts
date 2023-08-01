@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
-import { Chat } from 'src/forms/schema.schema';
+import { Chat, Summary } from 'src/forms/schema.schema';
 
 @Injectable()
 export class S3Service {
@@ -12,6 +12,7 @@ export class S3Service {
 
   constructor(
     @InjectModel(Chat.name) private chatModel: Model<Chat>,
+    @InjectModel(Summary.name) private summaryModel: Model<Summary>,
     private configService: ConfigService
   ) {
     this.s3 = new S3({
@@ -39,8 +40,12 @@ export class S3Service {
     console.log(process.env.AWS_SECRET_ACCESS_KEY);
   }
   
-  async create(img_metadata: string, room_id): Promise<Chat> {
+  async createtoChatModel(img_metadata: string, room_id): Promise<Chat> {
     const createdImage = new this.chatModel({ img_metadata , room_id});
+    return createdImage.save();
+  }
+  async createtoSummaryModel(parseresult:string[], imgUrl:string, user_nickname:string, room_id): Promise<Summary> {
+    const createdImage = new this.summaryModel({message_summary:parseresult , img_url:imgUrl, user_nickname:user_nickname, room_id:room_id});
     return createdImage.save();
   }
 }

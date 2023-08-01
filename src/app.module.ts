@@ -8,10 +8,9 @@ import { SttModule } from './stt/stt.module';
 import { SocketModule } from './socket/socket.module';
 import { RoomModule } from './room/room.module';
 import { GptService } from './room/gpt.service';
-import { S3Module } from './s3/s3.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { S3 } from 'aws-sdk';
-import { S3Service } from './s3/s3.service';
+import { S3Service } from './room/s3.service';
 import { TwilioService } from './twilio.service';
 
 @Module({
@@ -24,7 +23,6 @@ import { TwilioService } from './twilio.service';
     AuthModule,
     SocketModule,
     RoomModule,
-    S3Module,
     MulterModule.register(),
   ],
   controllers: [AppController],
