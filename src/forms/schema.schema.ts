@@ -78,18 +78,8 @@ export class Summ {
     summary: string;
 }
 
-@Schema()
-export class S3toDB {
-    @Prop({ required: true })
-    imageUrl: string;
-
-    @Prop({ default: Date.now })
-    img_creatAt: Date;
-}
 
 export const SummSchema = SchemaFactory.createForClass(Summ);
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
 export const ChatSchema = SchemaFactory.createForClass(Chat);
-export const S3toDBSchema = SchemaFactory.createForClass(S3toDB);
-export type ImageDocument = S3toDB & Document;

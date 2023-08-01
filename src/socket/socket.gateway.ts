@@ -58,7 +58,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
     @MessageBody() chatInputDto: ChatInputDto,
   ) {
-    console.log(chatInputDto);
     this.socketService.createChat( chatInputDto );
     socket.to(chatInputDto.room_id).emit('message', { user_nickname: chatInputDto.user_nickname , message:chatInputDto.message });
     return { user_nickname: chatInputDto.user_nickname , message:chatInputDto.message };
@@ -72,9 +71,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() room_id: string,
   ) {
     socket.join(room_id); // join room
-    console.log("rlaehddbs");
-    console.log(room_id);
-    console.log(socket.rooms);
     socket.to(room_id).emit('join-room', 'welcome')
     return { success: true };
   }
@@ -82,12 +78,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('leave-room')
   handleLeaveRoom(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() {room_id,user_nickname} : {room_id: string, user_nickname: string}
+    @MessageBody() {room_id} : {room_id: string}
   ) {
-    socket.leave(room_id); // join room
-    console.log("rlaehddbs2222");
-    console.log(socket.rooms);
-    // socket.disconnect();
+    console.log(room_id);
+    socket.leave(room_id); // leave room
 
     return { success: true };
   }

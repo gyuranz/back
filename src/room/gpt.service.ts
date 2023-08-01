@@ -42,12 +42,14 @@ export class GptService {
             throw new HttpException('Error making API request', error.response.status);
         }
     }
-
+    
+    async generateText(prompt: string): Promise<string> {
+        return this.generateTextGPT3(prompt);
+    }
     async findFromDB(roomId: string) {
         // prompt는 요약, 퀴즈, 질문 마다 다르게 하면 될듯 
-        console.log('도착2');
-        let prompt = `You are teacher who teach students\nSummurize following contents in Korean in 10 lines\n`;
-                      
+        console.log('DB searching');
+        let prompt="";              
         let imgUrls = [];
         let imgUrl = "";
         // 이거 발표용 DB 스키마 로 수정해야됌
@@ -64,27 +66,18 @@ export class GptService {
             .select({message:1, img_metadata:1});
         for (const data of result) {
             if(data.img_metadata) {
-                // console.log(data.chat_creatAt.toISOString());
                 imgUrl = `https://aitolearn.s3.ap-northeast-2.amazonaws.com/${data.img_metadata}\n`;
                 // prompt += imgUrl;
                 prompt += await this.ocrService.textExtractionFromImage(imgUrl);
-                // prompt += '\n';
-                // imgUrls.push([imgUrl, data.chat_creatAt.toISOString()]);
+                prompt += '\n';
             }else if (data.message) {
-                // console.log(data.chat_creatAt.toISOString());
-                // prompt +=`createAt: ${data.chat_creatAt.toISOString()} ${data.message}\n`;
                 prompt += `${data.message}\n`;
             }
         } 
-
-
-        console.log(prompt)
+        // console.log(prompt)
         return {prompt, imgUrls};
     }
 
-    async generateText(prompt: string): Promise<string> {
-        return this.generateTextGPT3(prompt);
-    }
 
     
     async findFromSummaryDB() {
