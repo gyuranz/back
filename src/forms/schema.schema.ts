@@ -44,9 +44,6 @@ export class Room {
 
     @Prop()
     entire_chat: string;
-
-    @Prop({ type: [{ user_id: String, user_nickname: String }], default: [] })
-    room_joined_user_list: { user_id: string; user_nickname: string }[];
 }
 
 
@@ -66,20 +63,33 @@ export class Chat {
     img_metadata: string;
 
     @Prop({ default: Date.now })
-    chat_creatAt: Date;
+    chat_creatAt: Timestamp;
 
     // @Prop({type: [{user_nickname:String, user_id:String, message_id:String, message_text:String, message_creatAt:Date}], default: []})
     // realtime_chat: {user_nickname:string, user_id:string, message_id:string, message_text:string, message_creatAt:Date}[];
 }
 
 @Schema()
-export class Summ {
+export class Summary {
+    
     @Prop()
-    summary: string;
+    user_nickname: string;
+    
+    @Prop()
+    room_id: string;
+
+    @Prop({ type: [{type: String}] })
+    message_summary: string [];
+
+    @Prop()
+    img_url: string;
+
+    @Prop({ default: Date.now })
+    chat_creatAt: Timestamp;
 }
 
 
-export const SummSchema = SchemaFactory.createForClass(Summ);
+export const SummarySchema = SchemaFactory.createForClass(Summary);
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
 export const ChatSchema = SchemaFactory.createForClass(Chat);

@@ -16,8 +16,6 @@ export class SocketService {
     //     return this.chatModel.create(chat);
 
     createChat(chatDto: ChatInputDto): Promise<Chat> {
-
-        //         return this.chatModel.create(chat);
         return this.chatModel.create(chatDto);
         //     }
     }

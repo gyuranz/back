@@ -72,14 +72,6 @@ export class AppService {
       summary: room.room_summary,
     };
 
-    // 방에 이전 방문 기록이 있는지 확인하고 없으면 room_joined_user_list에 user_code 추가
-    if (!room.room_joined_user_list.find((user) => user.user_id === user_id)) {
-      room.room_joined_user_list.push(input_room_joined_user);
-      this.roomModel.collection.updateOne(
-        { room_id: room.room_id },
-        { $set: { room_joined_user_list: room.room_joined_user_list } },
-      );
-    }
 
     // 유저가 이전 방문 기록이 있는지 확인하고 없으면 user_joined_room_list 에 room_id 추가
     if (
@@ -114,17 +106,13 @@ export class AppService {
     const createroomid = this.generateRandomString(6);
     //방을 만들고 필요한 데이터 리턴
     const user = await this.findService.getUserbyId(user_id);
-    const input_room_joined_user = {
-      user_id: user.user_id,
-      user_nickname: user.user_nickname,
-    };
-    //room_joined_user_list에 user_id 추가
+
     try {
       const room = await this.createRoom({
         room_password: hashedPw,
         room_id: createroomid,
         room_name: createRoomDto.room_name,
-        room_joined_user_list: input_room_joined_user,
+
       });
       console.log(room);
       // 양식에 맞게 미리 등록.
