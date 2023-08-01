@@ -44,6 +44,23 @@ export class AppService {
     };
   }
 
+  async joinFinishedRoom(user_id:string ,room_id:string){
+    const user= await this.findService.getUserbyId(user_id);
+    console.log(room_id)
+    const isthererightroom = user.user_joined_room_list.filter(function(room){return room.room_id == room_id})
+    console.log(isthererightroom, "test")
+    if(!isthererightroom){
+      throw new HttpException('접속이 허용되지 않은 방입니다.',422);
+    }
+    const room = await this.findService.getRoombyId(room_id);
+    return {
+      room_id: room.room_id,
+      room_name: room.room_name,
+      room_summary: room.room_summary,
+      room_password: room.room_password,
+    };
+  }
+
   //방에 입장하고, 방 코드, 초대키, 방 이름 리턴
   async joinNewRoom(user_id, joinRoomDto: JoinRoomDto) {
     const room = await this.findService.getRoombyId(joinRoomDto.room_id);
