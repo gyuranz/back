@@ -45,7 +45,7 @@ export class S3Service {
   }
 
   async createtoChatModel(file: Express.Multer.File, room_id: string): Promise<Chat> {
-    const img_metadata = `${uuidv4()}-${file.originalname}`;
+    const img_metadata = `${uuidv4()}-altolearnHello`;
     const createdImage = new this.chatModel({ img_metadata, room_id });
     return createdImage.save();
   }

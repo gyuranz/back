@@ -23,4 +23,6 @@ export class RoomService {
     const summary = this.summaryModel.find({room_id:room_id,user_nickname:user_nickname}).sort({chat_creatAt:1}).select({message_summary:1, img_url:1});
     return summary;
   }
+
+
 }
