@@ -6,6 +6,10 @@ import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
 import { Chat, Summary, Room, User } from 'src/forms/schema.schema';
 import { FindService } from 'src/auth/find.service';
+import { Buffer } from 'buffer';
+import * as AWS from 'aws-sdk';
+
+
 
 @Injectable()
 export class S3Service {
@@ -26,16 +30,22 @@ export class S3Service {
       }
     });
   }
+  
+  async uploadFileToS3(file, img_metadata:string): Promise<string> {
+    const base64ImageWithoutPrefix = file.buffer.toString('base64');
+    const binaryImageData = Buffer.from(base64ImageWithoutPrefix, 'base64');
+    const s3g = new AWS.S3();
 
-  async uploadFileToS3(file: Express.Multer.File, img_metadata:string): Promise<string> {
+
     const key = `${img_metadata}`;
     const params = {
       Bucket: 'aitolearn',
       Key: key,
-      Body: file.buffer,
+      Body: binaryImageData,
+      ContentType: 'image/png',
     };
-
-    await this.s3.upload(params).promise();
+  
+    await s3g.upload(params).promise();
     return key;
   }
 

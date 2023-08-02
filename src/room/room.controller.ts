@@ -22,24 +22,19 @@ export class RoomController {
     // 기존의 채팅내용과 imgUrl 불러옴
     const { prompt, imgUrl } = await this.gptService.findChatLogFromDBforSummary(room_id);
     let merged_prompt = base_prompt + prompt;
-    console.log(merged_prompt)
     const result = await this.gptService.generateText(merged_prompt);
     const parseresult = result.split(".");
-    console.log(parseresult);
     // user_nickname은 서버에서 따로 받아옴, room_id로 room_joined_user_list의 user_nickname에 대해 Summary에 넣음
     const user_nicknames = await this.s3Service.findFromRoomModel(room_id);
-
     for (const user_nickname of user_nicknames) {
       const saveSummary = await this.s3Service.createtoSummaryModel(parseresult, imgUrl, user_nickname, room_id);
     }
     //ChatModel에 이미지 메타데이터 넣기.
     const savedImage = await this.s3Service.createtoChatModel(room_id);
     const img_metadata = savedImage.img_metadata;
-
     //S3에 새로운 이미지 업로드
-    console.log(file);
     await this.s3Service.uploadFileToS3(file, img_metadata);
-    console.log(savedImage);
+    console.log('S3 upload Complite!')
     return savedImage;
   }
 
@@ -106,7 +101,6 @@ export class RoomController {
     } else {
       return { roomExists: false };
     }
-
   }
 
   // @Get(`:room_id/summary`)
