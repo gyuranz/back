@@ -81,6 +81,7 @@ export class AppService {
       user_id: user.user_id,
       user_nickname: user.user_nickname,
     };
+    console.log(input_room_joined_user,"??????????")
     //! room summary가 맞나?
     //유저가 가지고 있는 유저가 들어갔던 데이터
     const input_user_joined_room = {
@@ -102,19 +103,13 @@ export class AppService {
         { $set: { user_joined_room_list: user.user_joined_room_list } },
       );
     }
+    const room_id=room.room_id;
 
-    // 방에 접근 권한이 있는 유저인지 확인, 없으면 room_joined_user_list 에 room_id 추가
-    if (
-      !room.room_joined_user_list.find(
-        (user) => user.user_nickname === user.user_nickname,
-      )
-    ) {
-      room.room_joined_user_list.push(input_room_joined_user);
-      this.userModel.collection.updateOne(
-        { user_id },
-        { $set: { room_joined_user_list: room.room_joined_user_list } },
-      );
-    }
+    room.room_joined_user_list.push(input_room_joined_user);
+    this.roomModel.collection.updateOne(
+      { room_id },
+      { $set: { room_joined_user_list: room.room_joined_user_list } },
+    );
 
     return {
       room_id: room.room_id,

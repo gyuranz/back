@@ -19,7 +19,6 @@ export class RoomController {
   async uploadFile(@UploadedFile() file: Express.Multer.File, @Param('room_id') room_id: string) {
     let base_prompt = `You are teacher who teach students\nSummurize following contents in Korean in 10 lines\nRule1: All sentences must end with a period like this -> Amazon S3는 블록 수준의 영구 스토리지이다.\n`;
     console.log('upload and summary test');
-
     // 기존의 채팅내용과 imgUrl 불러옴
     const { prompt, imgUrl } = await this.gptService.findChatLogFromDBforSummary(room_id);
     let merged_prompt = base_prompt + prompt;
@@ -42,20 +41,8 @@ export class RoomController {
     console.log(savedImage);
     return savedImage;
   }
-  // @Post(':room_id/summary') // 미완성임 대거 수정해야함
-  // async findFromDBAndGetSummary(
-  //   @Param('room_id') room_id: string,
-  //   @Body() userNickname: { user_nickname: string },
-  // ) {
-  //   const user_nickname = userNickname.user_nickname;
 
-  //   const summaryfromDB = this.roomService.findFromDBAndGetSummary(
-  //     room_id,
-  //     user_nickname,
-  //   );
-  //   console.log({ summaryfromDB });
-  //   return { summaryfromDB };
-  // }
+
   @Post(':room_id/summary') 
   async findFromDBAndGetSummary(@Param('room_id') room_id: string ,@Body() userNickname: {user_nickname: string}) {
     const {user_nickname}=userNickname;

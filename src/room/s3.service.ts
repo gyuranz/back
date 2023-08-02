@@ -4,7 +4,8 @@ import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
-import { Chat, Summary, Room } from 'src/forms/schema.schema';
+import { Chat, Summary, Room, User } from 'src/forms/schema.schema';
+import { FindService } from 'src/auth/find.service';
 
 @Injectable()
 export class S3Service {
@@ -12,9 +13,11 @@ export class S3Service {
 
   constructor(
     @InjectModel(Chat.name) private chatModel: Model<Chat>,
+    @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Summary.name) private summaryModel: Model<Summary>,
     @InjectModel(Room.name) private roomModel: Model<Room>,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private findService: FindService
   ) {
     this.s3 = new S3({
       credentials: {
@@ -55,11 +58,18 @@ export class S3Service {
 
   async findFromRoomModel(room_id: string) {
     console.log('RoomDB searching');
-    const userNicknames = await this.roomModel.find({ room_id: room_id })
-      .select({ room_user_joined_list: 1 })[0]
-      .map(user => user.user_nickname);
-    console.log(userNicknames);
-    return userNicknames.flat();
+    let ArrayforRoomUserNickname=[];
+    const room = await this.findService.getRoombyId(room_id);
+    const roomhasuser=room.room_joined_user_list
+    for (let i=0; i< roomhasuser.length ; i++){
+      ArrayforRoomUserNickname.push(roomhasuser[i].user_nickname);
+    }
+    // console.log(roomhasuser,"!!");
+    // const userNicknames = await this.roomModel.find({ room_id: room_id })
+    //   .select({ room_user_joined_list: 1 })[0]
+    //   .map(user => user.user_nickname);
+    console.log(ArrayforRoomUserNickname);
+    return ArrayforRoomUserNickname
 
   }
 
