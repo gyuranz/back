@@ -44,11 +44,17 @@ export class S3Service {
     console.log(process.env.AWS_SECRET_ACCESS_KEY);
   }
 
-  async createtoChatModel(file: Express.Multer.File, room_id: string): Promise<Chat> {
+  // async createtoChatModel(file: Express.Multer.File, room_id: string): Promise<Chat> {
+  //   const img_metadata = `${uuidv4()}-altolearnHello`;
+  //   const createdImage = new this.chatModel({ img_metadata, room_id });
+  //   return createdImage.save();
+  // }
+  async createtoChatModel(room_id: string): Promise<Chat> {
     const img_metadata = `${uuidv4()}-altolearnHello`;
     const createdImage = new this.chatModel({ img_metadata, room_id });
     return createdImage.save();
   }
+  
 
 
   async createtoSummaryModel(parseresult: string[], imgUrl: string, user_nickname: string, room_id): Promise<Summary> {

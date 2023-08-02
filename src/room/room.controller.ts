@@ -33,11 +33,11 @@ export class RoomController {
       const saveSummary = await this.s3Service.createtoSummaryModel(parseresult, imgUrl, user_nickname, room_id);
     }
     //ChatModel에 이미지 메타데이터 넣기.
-    const savedImage = await this.s3Service.createtoChatModel(file, room_id);
-    const img_metadata = savedImage.img_metadata
+    const savedImage = await this.s3Service.createtoChatModel(room_id);
+    const img_metadata = savedImage.img_metadata;
 
     //S3에 새로운 이미지 업로드
-    console.log(file)
+    console.log(file);
     await this.s3Service.uploadFileToS3(file, img_metadata);
     console.log(savedImage);
     return savedImage;
@@ -65,20 +65,21 @@ export class RoomController {
   @Post(':room_id/summary')
   async findFromDBAndGetSummary(@Param('room_id') room_id: string, @Body() userNickname: { user_nickname: string }) {
     const { user_nickname } = userNickname;
-    const summaryfromDB = this.roomService.findFromDBAndGetSummary(room_id, user_nickname);
+    const summaryfromDB = await this.roomService.findFromDBAndGetSummary(room_id, user_nickname);
     console.log(summaryfromDB);
     return { summaryfromDB };
   }
 
   @Get(':room_id/quiz')
-  async findFromDBAndMakeQuiz(@Param('room_id') room_id: string): Promise<{ result: string }> {
+  async findFromDBAndMakeQuiz(@Param('room_id') room_id: string): Promise<{ parseresult: string[] }> {
     console.log('Quiz Test');
-    let base_prompt = `Please make 10 O/X quizzes in Korean according to the following contents\nRule1:When making a quiz, the O X ratio must be 50% each.\nRule2: Don't make duplicate quizzes\nRule3: following this format strictly -> 퀴즈 1: Amazon S3는 블록 수준의 영구 스토리지이다. 답: X\n`;
+    let base_prompt = `Please make 10 O/X quizzes in Korean according to the following contents\nRule1:When making a quiz, the O X ratio must be 50% each.\nRule2: Don't make duplicate quizzes\nRule3: following this format strictly -> 퀴즈 1: Amazon S3는 블록 수준의 영구 스토리지이다. 답: X.`;
     const { prompt } = await this.gptService.findFromDB(room_id);
     let merged_prompt = `${base_prompt} ${prompt}`;
     console.log(merged_prompt);
     const result = await this.gptService.generateText(merged_prompt);
-    return { result };
+    const parseresult = result.split(/[.\n]/);
+    return { parseresult };
   }
 
   @Post(':room_id/question')

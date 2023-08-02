@@ -91,9 +91,10 @@ export class GptService {
                 imgUrl = `https://aitolearn.s3.ap-northeast-2.amazonaws.com/${data.img_metadata}\n`;
                 // prompt += imgUrl;
                 prompt += await this.ocrService.textExtractionFromImage(imgUrl);
-                prompt += '\n';
+                // prompt += '\n';
             }else if (data.message) {
-                prompt += `${data.message}\n`;
+                // prompt += `${data.message}\n`;
+                prompt += `${data.message}`;
             }
         } 
         // console.log(prompt)
