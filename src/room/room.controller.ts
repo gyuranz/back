@@ -34,10 +34,12 @@ export class RoomController {
     const saveSummary= await this.s3Service.createtoSummaryModel(parseresult, imgUrl, user_nickname, room_id);
     }  
     //ChatModel에 이미지 메타데이터 넣기.
-    const savedImage = await this.s3Service.createtoChatModel(imgUrl, room_id);
+    const savedImage = await this.s3Service.createtoChatModel(file, room_id);
+    const img_metadata = savedImage.img_metadata
+
     //S3에 새로운 이미지 업로드
-    await this.s3Service.uploadFileToS3(file);
-    console.log(savedImage)
+    await this.s3Service.uploadFileToS3(file, img_metadata);
+    console.log(savedImage);
     return savedImage;
   }
   // @Post(':room_id/summary') // 미완성임 대거 수정해야함

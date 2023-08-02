@@ -24,8 +24,8 @@ export class S3Service {
     });
   }
 
-  async uploadFileToS3(file: Express.Multer.File): Promise<string> {
-    const key = `${uuidv4()}-${file.originalname}`;
+  async uploadFileToS3(file: Express.Multer.File, img_metadata:string): Promise<string> {
+    const key = `${img_metadata}`;
     const params = {
       Bucket: 'aitolearn',
       Key: key,
@@ -41,10 +41,13 @@ export class S3Service {
     console.log(process.env.AWS_SECRET_ACCESS_KEY);
   }
 
-  async createtoChatModel(img_metadata: string, room_id): Promise<Chat> {
+  async createtoChatModel(file: Express.Multer.File, room_id: string): Promise<Chat> {
+    const img_metadata = `${uuidv4()}-${file.originalname}`;
     const createdImage = new this.chatModel({ img_metadata, room_id });
     return createdImage.save();
   }
+
+
   async createtoSummaryModel(parseresult: string[], imgUrl: string, user_nickname: string, room_id): Promise<Summary> {
     const createdImage = new this.summaryModel({ message_summary: parseresult, img_url: imgUrl, user_nickname: user_nickname, room_id: room_id });
     return createdImage.save();
