@@ -42,7 +42,7 @@ export class AppController {
     @Param('user_id') user_id: string,
     @Body() setDto: JoinRoomDto,
   ) {
-    console.log(setDto)
+    console.log(setDto);
     return await this.appService.joinNewRoom(user_id, setDto);
   }
 

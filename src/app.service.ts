@@ -14,7 +14,7 @@ export class AppService {
     private findService: FindService,
     @InjectModel(Room.name) private roomModel: Model<Room>,
     @InjectModel(User.name) private userModel: Model<User>,
-  ) {}
+  ) { }
 
   //유저의 아이디를 근거로, 유저의 정보를 비밀번호 제외하고 모두 리턴함
   async getUserInfoforMain(user_id: string) {
@@ -44,13 +44,13 @@ export class AppService {
     };
   }
 
-  async joinFinishedRoom(user_id:string ,room_id:string){
-    const user= await this.findService.getUserbyId(user_id);
+  async joinFinishedRoom(user_id: string, room_id: string) {
+    const user = await this.findService.getUserbyId(user_id);
     console.log(room_id)
-    const isthererightroom = user.user_joined_room_list.filter(function(room){return room.room_id == room_id})
+    const isthererightroom = user.user_joined_room_list.filter(function (room) { return room.room_id == room_id })
     console.log(isthererightroom, "test")
-    if(!isthererightroom){
-      throw new HttpException('접속이 허용되지 않은 방입니다.',422);
+    if (!isthererightroom) {
+      throw new HttpException('접속이 허용되지 않은 방입니다.', 422);
     }
     const room = await this.findService.getRoombyId(room_id);
     return {
@@ -103,6 +103,19 @@ export class AppService {
       );
     }
 
+    // 방에 접근 권한이 있는 유저인지 확인, 없으면 room_joined_user_list 에 room_id 추가
+    if (
+      !room.room_joined_user_list.find(
+        (user) => user.user_nickname === user.user_nickname,
+      )
+    ) {
+      room.room_joined_user_list.push(input_room_joined_user);
+      this.userModel.collection.updateOne(
+        { user_id },
+        { $set: { room_joined_user_list: room.room_joined_user_list } },
+      );
+    }
+
     return {
       room_id: room.room_id,
       room_name: room.room_name,
@@ -141,6 +154,11 @@ export class AppService {
         room_name: room.room_name,
         summary: room.room_summary,
       };
+
+      // room_joined_user_list에 user_id, user_nickname 추가
+      const input_room_joined_user = { user_id: user.user_id, user_nickname: user.user_nickname };
+      room.room_joined_user_list.push(input_room_joined_user);
+      this.roomModel.collection.updateOne({ room_id: room.room_id }, { $set: { room_joined_user_list: room.room_joined_user_list } });
 
       // user_joined_room_list 에 room_id 추가
       user.user_joined_room_list.push(input_user_joined_room);
