@@ -15,23 +15,24 @@ export class RoomController {
 
   @Post(`:room_id/upload`)
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Param('room_id') room_id: string, @Body() user_nickname:string) {
-    console.log(room_id, "방");
+  // async uploadFile(@UploadedFile() file: Express.Multer.File, @Param('room_id') room_id: string, @Body() userNickname:{user_nickname:string}) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Param('room_id') room_id: string) {
     let base_prompt = `You are teacher who teach students\nSummurize following contents in Korean in 10 lines\nRule1: All sentences must end with a period like this -> Amazon S3는 블록 수준의 영구 스토리지이다.\n`;
-    console.log('summary test');
-    // 스터디, 회의 중에 DB에 저장된 STT를 찾아서 발표 종료 버튼을 누르면, prompt로 ChatGPT에 보낸 후, 
-    // 다시 ChatGPT에서 prompt 관련된 요청을 처리하는 로직
+    console.log('upload and summary test');
 
-    // DB에서 스터디, 회의 내용을 불러옴(stt_message)
+    // 기존의 채팅내용과 imgUrl 불러옴
     const { prompt, imgUrl } = await this.gptService.findChatLogFromDBforSummary(room_id);
-    // console.log(imgUrls);
     let merged_prompt = base_prompt + prompt;
     console.log(merged_prompt)
     const result = await this.gptService.generateText(merged_prompt);
     const parseresult = result.split(".");
     console.log(parseresult);
+    // user_nickname은 서버에서 따로 받아옴, room_id로 room_joined_user_list의 user_nickname에 대해 Summary에 넣음
+    const user_nicknames = await this.s3Service.findFromRoomModel(room_id);
+    
+    for (const user_nickname of user_nicknames){
     const saveSummary= await this.s3Service.createtoSummaryModel(parseresult, imgUrl, user_nickname, room_id);
-
+    }  
     //ChatModel에 이미지 메타데이터 넣기.
     const savedImage = await this.s3Service.createtoChatModel(imgUrl, room_id);
     //S3에 새로운 이미지 업로드
@@ -39,11 +40,26 @@ export class RoomController {
     console.log(savedImage)
     return savedImage;
   }
+  // @Post(':room_id/summary') // 미완성임 대거 수정해야함
+  // async findFromDBAndGetSummary(
+  //   @Param('room_id') room_id: string,
+  //   @Body() userNickname: { user_nickname: string },
+  // ) {
+  //   const user_nickname = userNickname.user_nickname;
 
-  @Post(':room_id/summary') // 미완성임 대거 수정해야함
-  async findFromDBAndGetSummary(@Param('room_id') room_id: string ,@Body() user_nickname:string) {
-  const summaryfromDB = this.roomService.findFromDBAndGetSummary(room_id,user_nickname);
-  console.log(summaryfromDB);
+  //   const summaryfromDB = this.roomService.findFromDBAndGetSummary(
+  //     room_id,
+  //     user_nickname,
+  //   );
+  //   console.log({ summaryfromDB });
+  //   return { summaryfromDB };
+  // }
+  @Post(':room_id/summary') 
+  async findFromDBAndGetSummary(@Param('room_id') room_id: string ,@Body() userNickname: {user_nickname: string}) {
+    const {user_nickname}=userNickname;
+    const summaryfromDB = this.roomService.findFromDBAndGetSummary(room_id,user_nickname);
+    console.log(summaryfromDB);
+    return {summaryfromDB};
   }
 
   @Get(':room_id/quiz')
@@ -58,8 +74,10 @@ export class RoomController {
   }
 
   @Post(':room_id/question')
-  async findFromDBAndAnswerQuestion(@Param('room_id') room_id: string, @Body() userRequest: string): Promise<{ result: string }> {
-    let base_prompt = `${userRequest}\nPlease answer this request in Korean correctly based on following contents\n`;
+  async findFromDBAndAnswerQuestion(@Param('room_id') room_id: string, @Body() userRequest: {user_request: string}): Promise<{ result: string }> {
+    const {user_request} = userRequest;
+    console.log(user_request);
+    let base_prompt = `${user_request}\nPlease answer this request in Korean correctly based on following contents\n`;
     console.log('question test');
     const { prompt } = await this.gptService.findFromDB(room_id);
     let merged_prompt = `${base_prompt} ${prompt}`;

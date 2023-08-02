@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
-import { Chat, Summary } from 'src/forms/schema.schema';
+import { Chat, Summary, Room } from 'src/forms/schema.schema';
 
 @Injectable()
 export class S3Service {
@@ -13,6 +13,7 @@ export class S3Service {
   constructor(
     @InjectModel(Chat.name) private chatModel: Model<Chat>,
     @InjectModel(Summary.name) private summaryModel: Model<Summary>,
+    @InjectModel(Room.name) private roomModel: Model<Room>,
     private configService: ConfigService
   ) {
     this.s3 = new S3({
@@ -48,4 +49,40 @@ export class S3Service {
     const createdImage = new this.summaryModel({message_summary:parseresult , img_url:imgUrl, user_nickname:user_nickname, room_id:room_id});
     return createdImage.save();
   }
+
+  async findFromRoomModel(room_id:string) {
+    console.log('RoomDB searching');
+    const userNicknames = await this.roomModel.find({room_id:room_id})
+      .select({room_user_joined_list:1})[0]
+      .map(user => user.user_nickname);
+      return userNicknames.flat();
+
+  }
+
+
+//   async findChatLogFromDBforSummary(roomId: string) {
+//     console.log('DB searching');
+//     let promptstack = [];
+//     let prompt = "";
+//     let imgUrl = "";
+
+//     const result = await this.chatModel.find({ room_id: roomId })
+//         .sort({ chat_creatAt: -1 })
+//         .select({ message: 1, img_metadata: 1 });
+//     for (const data of result) {
+//         if (data.message) {
+//             promptstack.push(`${data.message}\n`);
+//         } else if (data.img_metadata) {
+//             imgUrl = `https://aitolearn.s3.ap-northeast-2.amazonaws.com/${data.img_metadata}\n`;
+//             // prompt += imgUrl;
+//             promptstack.push(await this.ocrService.textExtractionFromImage(imgUrl));
+//             break;
+//         }
+//     }
+//     console.log(promptstack);
+//     for (var i = promptstack.length - 1; i >= 0; i--) {
+//         prompt += promptstack[i]
+//     }
+//     return { prompt, imgUrl };
+// }
 }

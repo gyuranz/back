@@ -44,6 +44,9 @@ export class Room {
 
     @Prop()
     entire_chat: string;
+    // add
+    @Prop({type: [{ user_id: String, user_nickname: String}]})
+    room_joined_user_list: {user_id: string, user_nickname: string}[];
 }
 
 

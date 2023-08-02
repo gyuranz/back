@@ -73,7 +73,6 @@ export class GptService {
         for (var i = promptstack.length - 1; i >= 0; i--) {
             prompt += promptstack[i]
         }
-        console.log(prompt);
         return { prompt, imgUrl };
     }
 
