@@ -18,3 +18,8 @@ export class JoinRoomDto {
     @IsString()
     room_password: string;
 }
+
+export class FindInfoDto {
+    @IsString()
+    room_id: string;
+}

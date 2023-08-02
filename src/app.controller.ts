@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { User } from './forms/schema.schema';
-import { CreateRoomDto, JoinRoomDto } from './forms/room.dto';
+import { CreateRoomDto, FindInfoDto, JoinRoomDto } from './forms/room.dto';
 import { TwilioService } from './twilio.service';
 import { Response } from 'express';
 
@@ -53,17 +53,15 @@ export class AppController {
   ) {
     return await this.appService.createNewRoom(user_id, setDto);
   }
+
+  @Post('/:user_id/finished')
+  async findRoomInfoforMain(@Param('user_id') user_id: string, @Body() findInfo:FindInfoDto) {
+    console.log(findInfo.room_id);
+    const room_id=findInfo.room_id;
+    return await this.appService.joinFinishedRoom(user_id,room_id);
+  }
 }
 
-// @Get('/:user_id/finished')
-// async findUserInfoforMain(@Req() request) {
-//   console.log(request);
-//   const url = request.url;
-//   const parts = url.split('/');
-//   const user_id = parts[parts.length - 2];
-//   console.log(user_id);
-//   return await this.appService.getUserInfoforMain(user_id);
-//}
 
 // @Post('/:user_id/join')
 // async findUserInfoforJoin(@Body() setDto: User){
@@ -74,6 +72,7 @@ export class AppController {
 // async findUserInfoforCreate(@Body() setDto: User){
 //   return await this.appService.getUserInfoforJoinandCreate(setDto.user_id);
 // }
+
 /**
  * ! 기존 방 들어갈 때 필요한 것들 추가
  * ! 방식 1. 유저 id와 방 id를 보내면 방 id를 통해 방에 입장권한이 있는 유저인지 확인 후 검증하여 True, False 리턴
