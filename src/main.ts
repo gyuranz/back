@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as express from 'express';
 import * as path from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+
 // import { CorsOptions ,Cors} from 'cors'
 
 async function bootstrap() {

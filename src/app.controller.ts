@@ -12,6 +12,11 @@ export class AppController {
     private readonly twilioService: TwilioService,
   ) {}
 
+  @Get('healthCheck')
+  healthCheck(@Res() res: Response): void {
+    res.status(200).send('Health Check Page');
+  }
+
   @Get('/get-turn-credentials')
   async getTurnCredentials(@Res() res: Response) {
     try {

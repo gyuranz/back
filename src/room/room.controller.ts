@@ -76,6 +76,7 @@ export class RoomController {
     return { result };
   }
 
+  
   @Post(':room_id/question')
   async findFromDBAndAnswerQuestion(@Param('room_id') room_id: string, @Body() userRequest: { user_request: string }): Promise<{ result: string }> {
     const { user_request } = userRequest;
