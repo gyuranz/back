@@ -23,16 +23,17 @@ export class GptService {
     }
 
 
-    async generateTextGPT3(prompt: string) {
+    async generateTextGPT3(gpt_roll:string, prompt: string) {
         try {
             console.log('test test')
             const response = await this.openai.createChatCompletion({
                 model: 'gpt-3.5-turbo-16k',
                 messages: [
-                    { role: 'user', content: prompt }
+                    {role: 'system', content:gpt_roll},
+                    {role: 'user', content: prompt },
                 ],
                 max_tokens: 10000,
-                temperature: 1
+                temperature: 0.5
             })
             console.log(response.data.choices[0].message.content);
             return response.data.choices[0].message.content;
@@ -45,8 +46,8 @@ export class GptService {
         
     }
 
-    async generateText(prompt: string): Promise<string> {
-        return this.generateTextGPT3(prompt);
+    async generateText(gpt_roll: string, prompt: string): Promise<string> {
+        return this.generateTextGPT3(gpt_roll, prompt);
     }
 
     //요약용
