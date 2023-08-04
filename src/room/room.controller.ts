@@ -39,7 +39,7 @@ export class RoomController {
     }
     //S3에 새로운 이미지 업로드
     await this.s3Service.uploadFileToS3(file, savedImage.img_metadata); //! await 삭제
-    console.log('S3 upload Complite!')
+    console.log('S3 upload Complete!')
   }
 
   @Get(`:room_id/finished`)
@@ -118,7 +118,7 @@ export class RoomController {
                   Instructions:
                   - The answer must be completed within 5 seconds.
                   - The answer must be 3 sentences or less.
-                  - If you're unsure of an answer, you can say "잘 모르겠습니다." or "확실하지 않습니다." `;
+                  - If you can't find the answer in the following contents, you must say "잘 모르겠습니다. 스터디 정보와 맞지 않는 질문입니다." `;
     let { prompt } = await this.gptService.findFromDB(room_id);
     // prompt = `Please answer this request in Korean correctly based on following contents: ${prompt}`;
     // let merged_prompt = `${base_prompt} ${prompt}`;
