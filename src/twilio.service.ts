@@ -17,7 +17,7 @@ export class TwilioService {
       console.log('b');
       return token;
     } catch (err) {
-      console.log('Error occurred when fetching turn server credentials');
+      console.log('Error occurred when fetching turn server credentials','twilio 인증 실패');
       console.log(err);
       return null;
     }

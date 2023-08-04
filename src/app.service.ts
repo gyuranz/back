@@ -29,8 +29,14 @@ export class AppService {
   }
 
   async permissionUsertoRoom(user_id: string, room_id: string) {
-    const room = await this.findService.getUserbyId(room_id);
+    const room = await this.findService.getRoombyId(room_id);
     //! room_joined_user에 유저 정보가 있는지 조회하기
+    // if(!room.room_joined_user_list){
+    //   throw new HttpException('방에 접근할 수 없는 유저입니다.',422);
+    // }
+    // else{
+    //   return true
+    // }
     // room..find();
   }
 
@@ -38,7 +44,6 @@ export class AppService {
   async getUserInfoforJoinandCreate(user_id: string) {
     const user = await this.findService.getUserbyId(user_id);
     const { user_password, ...userexceptPWandJoinRoom } = user;
-    console.log(userexceptPWandJoinRoom);
     return {
       userexceptPWandJoinRoom,
     };
@@ -46,26 +51,28 @@ export class AppService {
 
   async joinFinishedRoom(user_id: string, room_id: string) {
     const user = await this.findService.getUserbyId(user_id);
-    console.log(room_id)
     const isthererightroom = user.user_joined_room_list.filter(function (room) { return room.room_id == room_id })
-    console.log(isthererightroom, "test")
     if (!isthererightroom) {
-      throw new HttpException('접속이 허용되지 않은 방입니다.', 422);
+      throw new HttpException('종료된 방에 입장 기록이 없습니다.', 422);
     }
-    const room = await this.findService.getRoombyId(room_id);
-    return {
-      room_id: room.room_id,
-      room_name: room.room_name,
-      room_summary: room.room_summary,
-      room_password: room.room_password,
-    };
+    try {
+      const room = await this.findService.getRoombyId(room_id);
+      return {
+        room_id: room.room_id,
+        room_name: room.room_name,
+        room_summary: room.room_summary,
+        room_password: room.room_password,
+      };
+    } catch {
+      throw new HttpException('종료된 방 입장에 실패했습니다. 방을 찾을 수 없습니다.', 422)
+    }
   }
 
   //방에 입장하고, 방 코드, 초대키, 방 이름 리턴
   async joinNewRoom(user_id, joinRoomDto: JoinRoomDto) {
     const room = await this.findService.getRoombyId(joinRoomDto.room_id);
     if (!room) {
-      throw new HttpException('일치하는 방이 없습니다.', 422);
+      throw new HttpException('일치하는 방이 없습니다. 초대 코드를 확인하세요', 422);
     }
     const { room_password: hashedPw, ...payload } = room;
     if (!bcrypt.compareSync(joinRoomDto.room_password, hashedPw)) {
@@ -81,8 +88,7 @@ export class AppService {
       user_id: user.user_id,
       user_nickname: user.user_nickname,
     };
-    console.log(input_room_joined_user, "??????????")
-    //! room summary가 맞나?
+    //! room 에 summary가 맞나?
     //유저가 가지고 있는 유저가 들어갔던 데이터
     const input_user_joined_room = {
       room_id: room.room_id,
@@ -92,30 +98,41 @@ export class AppService {
 
 
     // 유저가 이전 방문 기록이 있는지 확인하고 없으면 user_joined_room_list 에 room_id 추가
-    if (
-      !user.user_joined_room_list.find(
-        (room) => room.room_id === joinRoomDto.room_id,
-      )
-    ) {
-      user.user_joined_room_list.push(input_user_joined_room);
-      this.userModel.collection.updateOne(
-        { user_id },
-        { $set: { user_joined_room_list: user.user_joined_room_list } },
-      );
+    try{
+      if (
+        !user.user_joined_room_list.find(
+          (room) => room.room_id === joinRoomDto.room_id,
+        )
+      ) {
+        user.user_joined_room_list.push(input_user_joined_room);
+        this.userModel.collection.updateOne(
+          { user_id },
+          { $set: { user_joined_room_list: user.user_joined_room_list } },
+        );
+      }
+    } catch {
+      throw new HttpException('유저의 입장했던 방 목록 추가에 실패했습니다.', 422)
     }
 
-    const room_id = room.room_id;
-    if (
-      !room.room_joined_user_list.find(
-        (z) => z.user_nickname === user.user_nickname,
-      )
-    ) {
-      room.room_joined_user_list.push(input_room_joined_user);
-      this.roomModel.collection.updateOne(
-        { room_id },
-        { $set: { room_joined_user_list: room.room_joined_user_list } },
-      );
+    // 방에 입장했던 유저의 리스트를 확인하여 없으면 room_joined_user_list에 user_id 추가
+    // 얘는 방에서 유저의 정보를 가지고 있는 경우임
+    try {
+      const room_id = room.room_id;
+      if (
+        !room.room_joined_user_list.find(
+          (z) => z.user_nickname === user.user_nickname,
+        )
+      ) {
+        room.room_joined_user_list.push(input_room_joined_user);
+        this.roomModel.collection.updateOne(
+          { room_id },
+          { $set: { room_joined_user_list: room.room_joined_user_list } },
+        );
+      }
+    } catch {
+      throw new HttpException('방의 유저 목록 추가에 실패했습니다.', 422)
     }
+
     return {
       room_id: room.room_id,
       room_name: room.room_name,

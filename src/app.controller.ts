@@ -11,12 +11,14 @@ export class AppController {
     private readonly appService: AppService,
     private readonly twilioService: TwilioService,
   ) {}
-
+  
+  //https 헬스체크를 위한 controller
   @Get('healthCheck')
   healthCheck(@Res() res: Response): void {
     res.status(200).send('Health Check Page');
   }
 
+  // Socket 을 열기 위해 사용하는 함수
   @Get('/get-turn-credentials')
   async getTurnCredentials(@Res() res: Response) {
     try {
@@ -29,19 +31,23 @@ export class AppController {
       return res.send({ token: null });
     }
   }
+
+  // 기존에 들어갔던 방에 재입장.
   @Get('/room/:room_id')
-  async joinRoom(
+  async joinjoinedRoom(
     @Body('user_id') user_id: string,
     @Param('room_id') room_id: string,
   ) {
     return await this.appService.permissionUsertoRoom(user_id, room_id);
   }
 
+  // 유저의 기존에 들어갔던 방 조회를 위해 정보를 리턴함
   @Get('/:user_id/')
   async mainpage(@Param('user_id') user_id: string) {
     return await this.appService.getUserInfoforMain(user_id);
   }
 
+  // 유저가 새로 방에 입장할 때 사용, id와 비밀번호를 조회하고 승인함.
   @Post('/:user_id/join')
   async joinNewRoom(
     @Param('user_id') user_id: string,
@@ -51,6 +57,7 @@ export class AppController {
     return await this.appService.joinNewRoom(user_id, setDto);
   }
 
+  // 유저가 방을 생성할 때 사용, 방 id 와 비밀번호를 생성함.
   @Post('/:user_id/create')
   async createNewRoom(
     @Param('user_id') user_id: string,
@@ -59,6 +66,7 @@ export class AppController {
     return await this.appService.createNewRoom(user_id, setDto);
   }
 
+  // 유저가 기존에 들어갔던 방에 들어가기 위해 사용
   @Post('/:user_id/finished')
   async findRoomInfoforMain(@Param('user_id') user_id: string, @Body() findInfo:FindInfoDto) {
     console.log(findInfo.room_id);
@@ -78,10 +86,3 @@ export class AppController {
 //   return await this.appService.getUserInfoforJoinandCreate(setDto.user_id);
 // }
 
-/**
- * ! 기존 방 들어갈 때 필요한 것들 추가
- * ! 방식 1. 유저 id와 방 id를 보내면 방 id를 통해 방에 입장권한이 있는 유저인지 확인 후 검증하여 True, False 리턴
- * ! 방식 2. 입장하려는 방 id를 보내면 방 id를 통해 방에 입장권한이 있는 모든 유저명단을 보냄. 프론트에서 검증.
- * ! 리턴해줘야 하는 값,
- * ! 1.
- */
