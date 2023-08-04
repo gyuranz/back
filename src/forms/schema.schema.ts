@@ -67,6 +67,7 @@ export class Chat {
 
     @Prop({ default: Date.now })
     chat_creatAt: Timestamp;
+    //!오타, createAt로 
 
     // @Prop({type: [{user_nickname:String, user_id:String, message_id:String, message_text:String, message_creatAt:Date}], default: []})
     // realtime_chat: {user_nickname:string, user_id:string, message_id:string, message_text:string, message_creatAt:Date}[];
@@ -89,10 +90,23 @@ export class Summary {
 
     @Prop({ default: Date.now })
     chat_creatAt: Timestamp;
+    //! 바꿔야함. summary_createAt
 }
 
+@Schema()
+export class Quiz{
+    @Prop()
+    quiz_message:  string;
+
+    @Prop()
+    room_id: string;
+
+    @Prop({default: Date.now })
+    quiz_createAt:Timestamp;
+}
 
 export const SummarySchema = SchemaFactory.createForClass(Summary);
 export const UserSchema = SchemaFactory.createForClass(User);
 export const RoomSchema = SchemaFactory.createForClass(Room);
 export const ChatSchema = SchemaFactory.createForClass(Chat);
+export const QuizSchema = SchemaFactory.createForClass(Quiz);

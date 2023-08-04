@@ -3,7 +3,7 @@ import { Configuration, OpenAIApi } from 'openai';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Chat, Summary } from 'src/forms/schema.schema';
+import { Chat, Quiz, Summary } from 'src/forms/schema.schema';
 import { OcrService } from './ocr.service';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class GptService {
         private readonly configService: ConfigService,
         private ocrService: OcrService,
         @InjectModel(Chat.name) private chatModel: Model<Chat>,
-        @InjectModel(Summary.name) private summModel: Model<Summary>,
+        @InjectModel(Quiz.name) private quizModel: Model<Quiz>,
     ) {
         const configuration = new Configuration({
             organization: this.configService.get<string>(`OPENAI_ORGANIZATION`),
@@ -94,6 +94,8 @@ export class GptService {
                 // prompt += '\n';
             }else if (data.message) {
                 // prompt += `${data.message}\n`;
+
+                
                 prompt += `${data.message}`;
             }
         } 
@@ -101,6 +103,24 @@ export class GptService {
         return {prompt, imgUrls};
     }
 
+    quiztoDB(result, room_id){
+        this.quizModel.create({quiz_message:result , room_id: room_id});
+    }
+
+    async findQuizfromDB(room_id){
+        
+        const findQuiz=await this.quizModel.find({room_id:room_id},{quiz_message:true});
+        console.log(findQuiz);
+        console.log(findQuiz.length);
+        console.log(findQuiz.toString);
+
+        if (findQuiz.length > 0){
+            return findQuiz[0].quiz_message;
+        }
+        else{
+            return null;
+        }
+    }
     // async pushtoDB(a) {
     //     const result = await this.summModel.updateMany({}, 'message_summary');
     //     let extractResult = result.map((data) => data.message_summary[0]);

@@ -4,6 +4,7 @@ import { OcrService } from './ocr.service';
 import { RoomService } from './room.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { S3Service } from './s3.service';
+import { Quiz } from 'src/forms/schema.schema';
 
 @Controller('room')
 export class RoomController {
@@ -67,16 +68,23 @@ export class RoomController {
     @Param('room_id') room_id: string,
   ): Promise<{ result: string }> {
     console.log('Quiz Test');
-    let base_prompt = `Please make 10 O/X quizzes in Korean according to the following contents\nRule1:When making a quiz, the O X ratio must be 50% each.\nRule2: Don't make duplicate quizzes\nRule3: following this format strictly -> 퀴즈 1: Amazon S3는 블록 수준의 영구 스토리지이다. 답: X.\nRule4: you must only keep rule3 format, Don't give extra explanation`;
-    const { prompt } = await this.gptService.findFromDB(room_id);
-    let merged_prompt = `${base_prompt} ${prompt}`;
-    console.log(merged_prompt);
-    const result = await this.gptService.generateText(merged_prompt);
+    console.log(room_id);
+    const findQuiz = await this.gptService.findQuizfromDB(room_id)
+    if ( !findQuiz ){
+      let base_prompt = `Please make 10 O/X quizzes in Korean according to the following contents\nRule1:When making a quiz, the O X ratio must be 50% each.\nRule2: Don't make duplicate quizzes\nRule3: following this format strictly -> 퀴즈 1: Amazon S3는 블록 수준의 영구 스토리지이다. 답: X.\nRule4: you must only keep rule3 format, Don't give extra explanation`;
+      const { prompt } = await this.gptService.findFromDB(room_id);
+      let merged_prompt = `${base_prompt} ${prompt}`;
+      console.log(merged_prompt);
+      const result = await this.gptService.generateText(merged_prompt);
+      this.gptService.quiztoDB(result, room_id);
+      return { result };
+    } 
+    return { result: findQuiz };
     // const parseresult = result.split(/[.\n]/);
-    return { result };
+
   }
 
-  
+
   @Post(':room_id/question')
   async findFromDBAndAnswerQuestion(@Param('room_id') room_id: string, @Body() userRequest: { user_request: string }): Promise<{ result: string }> {
     const { user_request } = userRequest;
