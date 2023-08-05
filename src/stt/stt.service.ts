@@ -15,8 +15,8 @@ export class SttService {
     @InjectModel(Chat.name) private chatModel: Model<Chat>,
     ) {
     this.speechClient = new SpeechClient({
-      projectId : this.configService.get<string>(`PROJECT_ID`),
-      keyFilename: this.configService.get<string>(`KEY_FILE_NAME`),
+      projectId : this.configService.get<string>(`STT_PROJECT_ID`),
+      keyFilename: this.configService.get<string>(`STT_KEY_FILE_NAME`),
     });
   }
 
