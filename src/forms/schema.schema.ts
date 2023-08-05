@@ -47,6 +47,9 @@ export class Room {
     // add
     @Prop({type: [{ user_id: String, user_nickname: String}]})
     room_joined_user_list: {user_id: string, user_nickname: string}[];
+    
+    @Prop({default:false})
+    room_finished:boolean;
 }
 
 
@@ -85,8 +88,8 @@ export class Summary {
     @Prop({ type: [{type: String}] })
     message_summary: string [];
 
-    @Prop()
-    img_url: string;
+    // @Prop()
+    // img_url: string;
 
     @Prop({ default: Date.now })
     chat_creatAt: Timestamp;

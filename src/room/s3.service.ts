@@ -67,8 +67,8 @@ export class S3Service {
   
 
 
-  async createtoSummaryModel(parseresult: string[], imgUrl: string, user_nickname: string, room_id): Promise<Summary> {
-    const createdImage = new this.summaryModel({ message_summary: parseresult, img_url: imgUrl, user_nickname: user_nickname, room_id: room_id });
+  async createtoSummaryModel(parseresult: string[], user_nickname: string, room_id: string): Promise<Summary> {
+    const createdImage = new this.summaryModel({ message_summary: parseresult, user_nickname: user_nickname, room_id: room_id });
     return createdImage.save();
   }
 
@@ -85,8 +85,14 @@ export class S3Service {
     //   .select({ room_user_joined_list: 1 })[0]
     //   .map(user => user.user_nickname);
     console.log(ArrayforRoomUserNickname);
-    return ArrayforRoomUserNickname
+    return ArrayforRoomUserNickname;
 
+  }
+
+  async thatRoomFinish(room_id:string){
+    const room= await this.findService.getRoombyId(room_id)
+    room.room_finished = true;
+    this.roomModel.updateOne({room_id});
   }
 
 

@@ -34,8 +34,9 @@ export class RoomController {
     // user_nickname은 서버에서 따로 받아옴, room_id로 room_joined_user_list의 user_nickname에 대해 Summary에 넣음
     const user_nicknames = await this.s3Service.findFromRoomModel(room_id);
     const savedImage = await this.s3Service.createtoChatModel(room_id);
+    parseresult.push(savedImage.img_metadata);
     for (const user_nickname of user_nicknames) {
-      await this.s3Service.createtoSummaryModel(parseresult, savedImage.img_metadata, user_nickname, room_id); //! await 삭제
+      await this.s3Service.createtoSummaryModel(parseresult, user_nickname, room_id); //! await 삭제
     }
     //S3에 새로운 이미지 업로드
     await this.s3Service.uploadFileToS3(file, savedImage.img_metadata); //! await 삭제
@@ -62,7 +63,7 @@ export class RoomController {
     const user_nicknames = await this.s3Service.findFromRoomModel(room_id);
 
     for (const user_nickname of user_nicknames) {
-      await this.s3Service.createtoSummaryModel(parseresult, imgUrl, user_nickname, room_id);
+      await this.s3Service.createtoSummaryModel(parseresult, user_nickname, room_id);
     }
   }
 
