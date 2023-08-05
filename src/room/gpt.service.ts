@@ -14,6 +14,7 @@ export class GptService {
         private ocrService: OcrService,
         @InjectModel(Chat.name) private chatModel: Model<Chat>,
         @InjectModel(Quiz.name) private quizModel: Model<Quiz>,
+        @InjectModel(Summary.name) private summaryModel: Model<Summary>
     ) {
         const configuration = new Configuration({
             organization: this.configService.get<string>(`OPENAI_ORGANIZATION`),
@@ -121,6 +122,11 @@ export class GptService {
         else{
             return null;
         }
+    }
+    async findFromSummaryAndUpdate(room_id: string, user_nickname: string, message_summary: string[]) {
+        await this.summaryModel.deleteMany({room_id:room_id, user_nickname:user_nickname});
+        const result = new this.summaryModel({room_id:room_id, user_nickname:user_nickname, message_summary:message_summary}).save();
+        return result;
     }
     // async pushtoDB(a) {
     //     const result = await this.summModel.updateMany({}, 'message_summary');

@@ -139,6 +139,14 @@ export class RoomController {
     const result = await this.gptService.generateText(gpt_roll, prompt);
     return { result };
   }
+  
+  @Post(':room_id/update')
+  async func (@Param('room_id') room_id: string, @Body() userInfoAndMessage: {user_nickname: string, message_summary: string[]}){
+    const {user_nickname, message_summary } = userInfoAndMessage;
+    const result = await this.gptService.findFromSummaryAndUpdate(room_id, user_nickname, message_summary);
+    return {summaryfromDB: [{message_summary:result.message_summary}]};
+  }
+
 
   @Get('/api/:roomId')
   async checkRoomExists(@Param() { room_id }) {
