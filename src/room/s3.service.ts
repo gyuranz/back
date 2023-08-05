@@ -26,7 +26,7 @@ export class S3Service {
     this.s3 = new S3({
       credentials: {
         accessKeyId: this.configService.get<string>(`AWS_ACCESS_KEY_ID`),
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+        secretAccessKey: this.configService.get<string>(`AWS_SECRET_ACCESS_KEY`)
       }
     });
   }
@@ -42,7 +42,7 @@ export class S3Service {
       Bucket: 'aitolearn',
       Key: key,
       Body: binaryImageData,
-      ContentType: 'image/png',
+      ContentType: 'image/jpeg',
     };
   
     await s3g.upload(params).promise();
