@@ -25,22 +25,32 @@ export class RoomController {
                     - Eliminate unnecessary sentences when summarizing.
                     - The summary should not exceed 10 sentences.
                     - Summarization should complete within 10 seconds.`;
-    // 기존의 채팅내용과 imgUrl 불러옴
+    // 기존의 채팅내용과 직전 이미지의 imgUrl 불러옴, 이전 img 로 OCR 수행
     let { prompt } = await this.gptService.findChatLogFromDBforSummary(room_id);
     // let merged_prompt = base_prompt + prompt;
     console.log(prompt);
-    const result = await this.gptService.generateText(gpt_role, prompt);
-    const parseresult = result.split(".");
-    // user_nickname은 서버에서 따로 받아옴, room_id로 room_joined_user_list의 user_nickname에 대해 Summary에 넣음
-    const user_nicknames = await this.s3Service.findFromRoomModel(room_id);
-    const savedImage = await this.s3Service.createtoChatModel(room_id);
-    parseresult.push(savedImage.img_metadata);
-    for (const user_nickname of user_nicknames) {
-      await this.s3Service.createtoSummaryModel(parseresult, user_nickname, room_id); //! await 삭제
+    console.log(prompt.length);
+    if (prompt.length > 50) {
+      const result = await this.gptService.generateText(gpt_role, prompt);
+      const parseresult = result.split(".");
+      // user_nickname은 서버에서 따로 받아옴, room_id로 room_joined_user_list의 user_nickname에 대해 Summary에 넣음
+      const user_nicknames = await this.s3Service.findFromRoomModel(room_id);
+      const savedImage = await this.s3Service.createtoChatModel(room_id);
+      parseresult.push(savedImage.img_metadata);
+      for (const user_nickname of user_nicknames) {
+        await this.s3Service.createtoSummaryModel(parseresult, user_nickname, room_id); //! await 삭제
+      }
+      //S3에 새로운 이미지 업로드
+      await this.s3Service.uploadFileToS3(file, savedImage.img_metadata); //! await 삭제
+      console.log('S3 upload Complete!')
     }
-    //S3에 새로운 이미지 업로드
-    await this.s3Service.uploadFileToS3(file, savedImage.img_metadata); //! await 삭제
-    console.log('S3 upload Complete!')
+
+    else {
+      console.log('요약에 필요한 데이터가 부족합니다.')
+      const savedImage = await this.s3Service.createtoChatModel(room_id);
+      await this.s3Service.uploadFileToS3(file, savedImage.img_metadata); //! await 삭제
+      console.log('S3 upload Complete!')
+    }
   }
 
   @Get(`:room_id/finished`)
@@ -82,8 +92,8 @@ export class RoomController {
   ): Promise<{ result: string }> {
     console.log('Quiz Test');
     const findQuiz = await this.gptService.findQuizfromDB(room_id)
-    if ( !findQuiz ){
-    let gpt_roll= `You are the one who gives the O/X quiz. Make 10 O/X quizzes in Korean according to the following contents.
+    if (!findQuiz) {
+      let gpt_roll = `You are the one who gives the O/X quiz. Make 10 O/X quizzes in Korean according to the following contents.
                    Instructions:
                    - Don't make duplicate quizzes.
                    - following this example format strictly -> 퀴즈 1: 사자는 포유류에 속한다. 답: O.
@@ -91,18 +101,18 @@ export class RoomController {
                    - When creating a quiz set, the ratio of correct and incorrect answers in the quiz should be 50%.
                    - Don't give extra explanation of answer
                    - Process should be completed in 10 seconds.`;
-    // let merged_prompt = `${base_prompt} ${prompt}`;
-    // console.log(merged_prompt);
-    let { prompt } = await this.gptService.findFromDB(room_id);
-    console.log(prompt);
-    // let new_prompt = `Plesase make 10 O/X quizzes in Korean according to the following contents : (${prompt})`
-    // console.log(new_prompt);
+      // let merged_prompt = `${base_prompt} ${prompt}`;
+      // console.log(merged_prompt);
+      let { prompt } = await this.gptService.findFromDB(room_id);
+      console.log(prompt);
+      // let new_prompt = `Plesase make 10 O/X quizzes in Korean according to the following contents : (${prompt})`
+      // console.log(new_prompt);
 
-    const result = await this.gptService.generateText(gpt_roll,prompt);
-    this.gptService.quiztoDB(result, room_id);
-    return { result };
-  }
-  return { result: findQuiz };
+      const result = await this.gptService.generateText(gpt_roll, prompt);
+      this.gptService.quiztoDB(result, room_id);
+      return { result };
+    }
+    return { result: findQuiz };
   }
 
 
