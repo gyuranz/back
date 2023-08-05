@@ -34,3 +34,7 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# STT, OCR Keyfile
+quantum-age-393411-fc246ef7d9ef.json
+gyuranz-ce62d9231881.json

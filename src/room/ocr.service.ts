@@ -8,8 +8,8 @@ export class OcrService {
   constructor(private readonly configService: ConfigService) {
   
   const configuration = {
-    projectId: this.configService.get<string>(process.env.OCR_PROJECT_ID),
-    keyFilename: this.configService.get<string>(process.env.OCR_KEY_FILE_NAME)
+    projectId: this.configService.get<string>(`OCR_PROJECT_ID`),
+    keyFilename: this.configService.get<string>(`OCR_KEY_FILE_NAME`)
   }
   this.client = new ImageAnnotatorClient(configuration);
   }
