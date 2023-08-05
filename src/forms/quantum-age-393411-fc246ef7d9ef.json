@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "quantum-age-393411",
+  "private_key_id": "fc246ef7d9ef4bd8a407bfda5f1cb73d4be32645",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCnPRahcFykVmnR\nkqNq9AsfAvwxrpSlAye33uny4D5YHVzykw+kSXihiCKBRdre4pYuQIEqWLpqc+od\nMu6xpNGMvBslHcEEuozErwsZZZYBvH2JQDSCHBo+flZDZMqJAIaM23N9HwEEJKjp\nS5oJsqrFwPnxCTMdo9qNqb4HpcNdbN7cb76Pch+sVBqhMjeEqiC4aKoeXTAtU2UH\nPEJBRE/c3W1+zbtAFD3OYN/tLcXWmJHBz8cACMN45hSms47fUi1QUepkGHuqdltm\nFtp5nDhubuJ5AMrryLHdgHb3Rvmw+A0wLpBuuV9Gb8A+cYQEXkVi1Rd9wNUYNNzT\nkesraKIxAgMBAAECggEAKMAA4KuBV2Xa+P7zJN98Sj0u+GgiviaLqgj+Fnk/l7bn\n7A+bcxuX8jw6tCcyUrcBgxmin4/pNIE0HZNIiC6yBMndD2k1nBJctJw2ZyTSrW+h\nYy0q3j08w9eC638GvuVK482hUW6Zj8njAp2yVgScCf2gqXPlaaaAXZ5ruG9SsFOu\nruEWscLLxJTWPUo0O4+oYVBiQh7YFos27OqZs2D87SiU94j/k0ip40I+15qY/o6s\njnoMQtl4vU9zMyLIig521bDLffDoJxD1D5/sVJV+W0w+2cLniPixz/RQgeFSC+Om\nA6jr/TP2knmxr1zG2YAPGixw25Oh1VsubXzF3mAQcQKBgQDhqvQDTb8o/r3P6ySP\nBAMO5hdxRZvw59WKy+4R04u55OHG25fovq7odF5H2uV4Bn17YreVpO1diVxxSVq6\nzRXYleFBwkLZVAUB7baXAoj42dvujxrma93xSyMaI4uC6bA6N6W8n0BXCs7kuJLH\nXidUWuKiKWrqUZdi3pS/p0YfdQKBgQC9t6KIkZ9AwGXZTi5WUKhJ9niZ6BxpllTW\nZexwGrN/w2i1TdhsbmEQ/xRvWt0w27vQHvXoFF3B4Jf6TsZn6YhiUfSfnGTCCBCu\nHvR8yLllLTIz9SffJbTgFBHpvKqVnmwam9PwQ3lrpokESfyVVjBkJXe1PrfHt1I/\nAAPdgbL8TQKBgDGsic34XS3O9UVBQ2jfvzSWXW6nne3nek/1F9CAum8O/MvjJosq\n/iFZDC/Q9VX4R8LTNgoQpddDF0Awn3IjFr34L/9jnYdtQTTteJXBDxmICyt2ALvb\n3pzwpydnz5vfiNUnzqm4fFcsn+Ik5tpP1WRyJRUA/PHbR/GRgTi2v27JAoGBAIgL\na04rvtucHG0cFzZmWIfRauJTBCzjVKr6I/av7xArfKam0A/Rh2G8yVag/gTPTXsM\n+KIYGLOy7sjcPIK/gMGgq57Zc5eAWRXDtObWubvIETwZDSKD05TsT3whguIP3M2n\n+O9OM3/yyEZ/F9WvHLxz8cfS1c8tspji1eK94y/xAoGASb9fhWbYR/nwqHzsl+kJ\n6x5FHn5heAPWgbp/nbF5LEdM/G217QmcOMfd8Gn4nmblbumPi6HvOXyhKtS133Rr\ncohenRJX2pwBpULe0K/idI290pk4gxXzUBbayYC6TVzdstHEkAAXFJhRiWuxlXXM\ncAxyqbJsJg/pLsfIpBw8vsU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "ydg-stt@quantum-age-393411.iam.gserviceaccount.com",
+  "client_id": "115781230156341493410",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/ydg-stt%40quantum-age-393411.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
