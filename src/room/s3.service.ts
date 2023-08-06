@@ -42,7 +42,7 @@ export class S3Service {
       Bucket: 'aitolearn',
       Key: key,
       Body: binaryImageData,
-      ContentType: 'image/jpeg',
+      ContentType: 'image/png',
     };
   
     await s3g.upload(params).promise();
