@@ -23,52 +23,60 @@ export class RoomController {
                     Instructions:
                     - All sentences must end with a period like this -> 나는 바나나를 좋아한다.
                     - Eliminate unnecessary sentences when summarizing.
-                    - The summary should not exceed 10 sentences.
+                    - The summary should not exceed 7 sentences.
                     - Summarization should complete within 10 seconds.`;
     // 기존의 채팅내용과 직전 이미지의 imgUrl 불러옴, 이전 img 로 OCR 수행
     let { prompt } = await this.gptService.findChatLogFromDBforSummary(room_id);
     // let merged_prompt = base_prompt + prompt;
-    console.log(prompt);
-    console.log(prompt.length);
-    if (prompt.length > 50) {
+    console.log('요약할 prompt에는 OCR 텍스트 추출도 포함되어 있어야함');
+    console.log(`요약할 prompt: ${prompt}`);
+    // console.log(prompt.length);
+    if (prompt.length > 30) {
+      console.log('prompt 30줄 넘어가므로 요약 수행 ing~')
       const result = await this.gptService.generateText(gpt_role, prompt);
       const parseresult = result.split(".");
+      
       // user_nickname은 서버에서 따로 받아옴, room_id로 room_joined_user_list의 user_nickname에 대해 Summary에 넣음
       const user_nicknames = await this.s3Service.findFromRoomModel(room_id);
       const savedImage = await this.s3Service.createtoChatModel(room_id);
       parseresult.push(savedImage.img_metadata);
+      console.log(`요약한 내용 및 upload 파일 메타데이터:${parseresult}`);
       for (const user_nickname of user_nicknames) {
         await this.s3Service.createtoSummaryModel(parseresult, user_nickname, room_id); //! await 삭제
       }
       //S3에 새로운 이미지 업로드
       await this.s3Service.uploadFileToS3(file, savedImage.img_metadata); //! await 삭제
-      console.log('S3 upload Complete!')
+      console.log('S3 upload Complete!');
     }
 
     else {
-      console.log('요약에 필요한 데이터가 부족합니다.')
+      console.log('prompt 30줄 안넘어가서 요약 수행 안함~')
       const savedImage = await this.s3Service.createtoChatModel(room_id);
       await this.s3Service.uploadFileToS3(file, savedImage.img_metadata); //! await 삭제
-      console.log('S3 upload Complete!')
+      console.log('S3 upload Complete!');
     }
   }
 
   @Get(`:room_id/finished`)
   async studyFinishLetsSummary(@Param('room_id') room_id: string) {
-    console.log('upload and summary test');
+    console.log('finished and summary test');
     let gpt_role = `You are the one who summarizes the content. Summarizes following contents in Korean.
                     Instructions:
                     - All sentences must end with a period like this example -> 나는 바나나를 좋아한다.
                     - Eliminate unnecessary sentences when summarizing.
-                    - The summary should not exceed 10 sentences.
+                    - The summary should not exceed 7 sentences.
                     - Summarization should be completed within 10 seconds.`;
     // 기존의 채팅내용과 imgUrl 불러옴
     const { prompt, imgUrl } = await this.gptService.findChatLogFromDBforSummary(room_id);
     // let merged_prompt = base_prompt + prompt;
-    console.log(prompt)
+    // console.log(prompt)
+    console.log('요약할 prompt에는 OCR 텍스트 추출도 포함되어 있어야함');
+    console.log(`요약할 prompt: ${prompt}`);
     const result = await this.gptService.generateText(gpt_role, prompt);
     const parseresult = result.split(".");
-    console.log(parseresult);
+    console.log(`요약한 내용: ${parseresult}`);
+
+    // console.log(parseresult);
     // user_nickname은 서버에서 따로 받아옴, room_id로 room_joined_user_list의 user_nickname에 대해 Summary에 넣음
     const user_nicknames = await this.s3Service.findFromRoomModel(room_id);
 
@@ -128,13 +136,11 @@ export class RoomController {
     let gpt_roll = `You are the one responsing to request. answer this request(${user_request}) in Korean correctly based on following contents.
                   Instructions:
                   - The answer must be completed within 5 seconds.
-                  - The answer must be 3 sentences or less.
-                  - If you can't find the answer in the following contents, you must say "잘 모르겠습니다. 스터디 정보와 맞지 않는 질문입니다." `;
+                  - The answer must be 3 sentences or less. `;
     let { prompt } = await this.gptService.findFromDB(room_id);
     // prompt = `Please answer this request in Korean correctly based on following contents: ${prompt}`;
     // let merged_prompt = `${base_prompt} ${prompt}`;
     // let new_prompt = `${user_request} ${prompt}`;
-    console.log(gpt_roll);
     console.log(prompt);
     const result = await this.gptService.generateText(gpt_roll, prompt);
     return { result };

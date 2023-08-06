@@ -51,7 +51,7 @@ export class S3Service {
 
   async consoleKey() {
     console.log(this.configService.get<string>(`AWS_ACCESS_KEY_ID`));
-    console.log(process.env.AWS_SECRET_ACCESS_KEY);
+    console.log(this.configService.get<string>(`AWS_SECRET_ACCESS_KEY`));
   }
 
   // async createtoChatModel(file: Express.Multer.File, room_id: string): Promise<Chat> {
@@ -84,7 +84,7 @@ export class S3Service {
     // const userNicknames = await this.roomModel.find({ room_id: room_id })
     //   .select({ room_user_joined_list: 1 })[0]
     //   .map(user => user.user_nickname);
-    console.log(ArrayforRoomUserNickname);
+    // console.log(ArrayforRoomUserNickname);
     return ArrayforRoomUserNickname;
 
   }

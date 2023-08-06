@@ -36,7 +36,6 @@ export class GptService {
                 max_tokens: 10000,
                 temperature: 0.5
             })
-            console.log(response.data.choices[0].message.content);
             return response.data.choices[0].message.content;
         } catch (error) {
             console.log(error)
@@ -53,7 +52,7 @@ export class GptService {
 
     //요약용
     async findChatLogFromDBforSummary(roomId: string) {
-        console.log('DB searching');
+        // console.log('DB searching');
         let promptstack = [];
         let prompt = "";
         let imgUrl = "";
@@ -71,7 +70,7 @@ export class GptService {
                 break;
             }
         }
-        console.log(promptstack);
+        // console.log(promptstack);
         for (var i = promptstack.length - 1; i >= 0; i--) {
             prompt += promptstack[i]
         }
@@ -80,7 +79,7 @@ export class GptService {
 
 
     async findFromDB(roomId: string) {
-        console.log('DB searching');
+        // console.log('DB searching');
         let prompt="";              
         let imgUrls = [];
         let imgUrl = "";
