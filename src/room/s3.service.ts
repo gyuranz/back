@@ -73,7 +73,7 @@ export class S3Service {
   }
 
   async findFromRoomModel(room_id: string) {
-    console.log('RoomDB searching');
+    // console.log('RoomDB searching');
     let ArrayforRoomUserNickname=[];
     const room = await this.findService.getRoombyId(room_id);
     const roomhasuser=room.room_joined_user_list

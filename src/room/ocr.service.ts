@@ -18,7 +18,7 @@ export class OcrService {
     const [ result ] = await this.client.textDetection(imgUrl);
     const detections = result.textAnnotations;
     // console.log('Text: ');
-    console.log(detections[0].description);
+    // console.log(detections[0].description);
     return detections[0].description;
   }
 }

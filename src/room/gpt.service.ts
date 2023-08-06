@@ -26,19 +26,20 @@ export class GptService {
 
     async generateTextGPT3(gpt_roll:string, prompt: string) {
         try {
-            console.log('test test')
+            console.log('GPT start');
             const response = await this.openai.createChatCompletion({
                 model: 'gpt-3.5-turbo-16k',
                 messages: [
                     {role: 'system', content:gpt_roll},
                     {role: 'user', content: prompt },
                 ],
-                max_tokens: 10000,
+                max_tokens: 3000,
                 temperature: 0.5
             })
+            console.log("GPT 수행 완료");
             return response.data.choices[0].message.content;
         } catch (error) {
-            console.log(error)
+            console.log("GPT 에러발생: ", error.response.status);
             throw new HttpException('Error making API request', error.response.status);
         }
 
