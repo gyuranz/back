@@ -22,8 +22,8 @@ export class User {
     @Prop({ unique: true })
     user_nickname: string;
 
-    @Prop({ type: [{ room_id: String, room_name: String, summary: String }] })
-    user_joined_room_list: { room_id: string, room_name: string, summary: string }[];
+    @Prop({ type: [{ room_id: String, room_name: String , room_createAt:Date}] })
+    user_joined_room_list: { room_id: string, room_name: string ,room_createAt:Timestamp}[];
     // @Prop()
     // createUser_Dt: Date;
 }
@@ -40,9 +40,6 @@ export class Room {
     room_password: string;
 
     @Prop()
-    room_summary: string;
-
-    @Prop()
     entire_chat: string;
     // add
     @Prop({type: [{ user_id: String, user_nickname: String}]})
@@ -50,6 +47,9 @@ export class Room {
     
     @Prop({default:false})
     room_finished:boolean;
+
+    @Prop({ default: Date.now })
+    room_creatAt: Timestamp;
 }
 
 

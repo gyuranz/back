@@ -19,7 +19,6 @@ export class AppService {
   //유저의 아이디를 근거로, 유저의 정보를 비밀번호 제외하고 모두 리턴함
   async getUserInfoforMain(user_id: string) {
     const user = await this.findService.getUserbyId(user_id);
-
     // const { user_password, ...userexceptPW } = user;
     // console.log(userexceptPW);
     return {
@@ -56,7 +55,6 @@ export class AppService {
     return {
       room_id: room.room_id,
       room_name: room.room_name,
-      room_summary: room.room_summary,
       room_password: room.room_password,
       room_finished: room.room_finished,
     };
@@ -88,7 +86,7 @@ export class AppService {
     const input_user_joined_room = {
       room_id: room.room_id,
       room_name: room.room_name,
-      summary: room.room_summary,
+      room_createAt: room.room_creatAt,
     };
 
 
@@ -119,8 +117,7 @@ export class AppService {
     }
     return {
       room_id: room.room_id,
-      room_name: room.room_name,
-      room_summary: room.room_summary,
+      room_name: room.room_name
     };
   }
 
@@ -153,7 +150,7 @@ export class AppService {
       const input_user_joined_room = {
         room_id: room.room_id,
         room_name: room.room_name,
-        summary: room.room_summary,
+        room_createAt: room.room_creatAt
       };
 
       // room_joined_user_list에 user_id, user_nickname 추가
