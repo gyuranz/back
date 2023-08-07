@@ -119,13 +119,10 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
         // this.recognizeStream.on('data', (data: any) => {
         .on('data', (data: any) => {
           const result = data.results[0];
-          console.log(data);
           const isFinal = result.isFinal; //말이 끊겼을때 stt 작업 멈추고 transcription 을 리턴해줌
           const transcription = data.results // stt 결과물
             .map((result: any) => result.alternatives[0].transcript)
             .join('\n');
-
-          console.log(`Transcription: `, transcription);
 
           // 방에 있는 유저들에게 transcription 결과물 보내줌
           client.to(room_id).emit('receive_audio_text', {
@@ -137,6 +134,7 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
           if (isFinal) {
             // DB에 저장하는 코드
             // this.sttService.createMessage({stt_message:transcription} as any);
+            console.log(`Transcription: `, transcription);
             this.sttService.createMessagetoChat({
               message: transcription,
               room_id,
