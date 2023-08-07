@@ -39,7 +39,7 @@ export class GptService {
             console.log("GPT 수행 완료");
             return response.data.choices[0].message.content;
         } catch (error) {
-            console.log("GPT 에러발생: ", error.response.status);
+            console.log("GPT 에러발생");
             throw new HttpException('Error making API request', error.response.status);
         }
 
@@ -56,7 +56,7 @@ export class GptService {
         // console.log('DB searching');
         let promptstack = [];
         let prompt = "";
-        let imgUrl = "";
+        let prevImgUrl = "";
 
         const result = await this.chatModel.find({ room_id: roomId })
             .sort({ chat_creatAt: -1 })
@@ -65,9 +65,9 @@ export class GptService {
             if (data.message) {
                 promptstack.push(`${data.message}\n`);
             } else if (data.img_metadata) {
-                imgUrl = `https://aitolearn.s3.ap-northeast-2.amazonaws.com/${data.img_metadata}\n`;
+                prevImgUrl = `https://aitolearn.s3.ap-northeast-2.amazonaws.com/${data.img_metadata}\n`;
                 // prompt += imgUrl;
-                promptstack.push(await this.ocrService.textExtractionFromImage(imgUrl));
+                promptstack.push(await this.ocrService.textExtractionFromImage(prevImgUrl));
                 break;
             }
         }
@@ -75,7 +75,7 @@ export class GptService {
         for (var i = promptstack.length - 1; i >= 0; i--) {
             prompt += promptstack[i]
         }
-        return { prompt, imgUrl };
+        return { prompt, prevImgUrl };
     }
 
 
@@ -112,9 +112,9 @@ export class GptService {
     async findQuizfromDB(room_id){
         
         const findQuiz=await this.quizModel.find({room_id:room_id},{quiz_message:true});
-        console.log(findQuiz);
-        console.log(findQuiz.length);
-        console.log(findQuiz.toString);
+        // console.log(findQuiz);
+        // console.log(findQuiz.length);
+        // console.log(findQuiz.toString);
 
         if (findQuiz.length > 0){
             return findQuiz[0].quiz_message;
