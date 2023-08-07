@@ -94,7 +94,10 @@ export class RoomController {
       await this.s3Service.createtoSummaryModel(parseresult, user_nickname, room_id);
       console.log(`summary_collection의 ${user_nickname}에게 요약 정보 전달`);
     }
+    const room = await this.s3Service.thatRoomFinish(room_id);
     console.log('Finish Complete!');
+    return {room_finished: room.room_finished};
+
   }
 
   @Post(':room_id/summary')

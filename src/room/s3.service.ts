@@ -92,7 +92,7 @@ export class S3Service {
   async thatRoomFinish(room_id:string){
     const room= await this.findService.getRoombyId(room_id)
     room.room_finished = true;
-    room.save();
+    return room.save();
   }
 
 
