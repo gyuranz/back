@@ -58,6 +58,7 @@ export class AppService {
       room_name: room.room_name,
       room_summary: room.room_summary,
       room_password: room.room_password,
+      room_finished: room.room_finished,
     };
   }
 
