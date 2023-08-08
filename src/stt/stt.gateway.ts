@@ -105,6 +105,10 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
         enableSpeakerDiarization: true,
         model: 'command_and_search',
         useEnhanced: true,
+        speechContexts: [{
+          phrases: ['짜파구리','짜파게티','너구리','쌀국수','싸르보나라','둥지라볶이','비빔둥지냉면','라볶이','맵찔이','대인이형','불닭게티','불닭볶음면','오뚜기','뽀글이','국룰'],
+          boost:20,
+        }],
       },
       interimResults: true,
     };

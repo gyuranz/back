@@ -114,6 +114,7 @@ export class RoomController {
     @Param('room_id') room_id: string,
   ): Promise<{ result: string }> {
     console.log('Quiz start!!');
+    // - When creating a quiz set, the ratio of correct and incorrect answers in the quiz should be 50%.
     const findQuiz = await this.gptService.findQuizfromDB(room_id)
     if (!findQuiz) {
       const gpt_roll = `You are the one who gives the O/X quiz. Make 10 O/X quizzes in Korean according to the following contents.
@@ -121,7 +122,7 @@ export class RoomController {
                    - Don't make duplicate quizzes.
                    - following this example format strictly -> 퀴즈 1: 사자는 포유류에 속한다. 답: O.
                    - Don't use example as quiz.
-                   - When creating a quiz set, the ratio of correct and incorrect answers in the quiz should be 50%.
+                   - When making quiz set, there should be 5 correct answers and 5 incorrect answers.
                    - Don't give extra explanation of answer.
                    - Process should be completed in 10 seconds.`;
       const { prompt } = await this.gptService.findFromDB(room_id);
