@@ -105,10 +105,12 @@ export class SttGateway implements OnGatewayConnection, OnGatewayDisconnect {
         enableSpeakerDiarization: true,
         model: 'command_and_search',
         useEnhanced: true,
-        speechContexts: [{
-          phrases: ['짜파구리','짜파게티','너구리','쌀국수','싸르보나라','둥지라볶이','비빔둥지냉면','라볶이','맵찔이','대인이형','불닭게티','불닭볶음면','오뚜기','뽀글이','국룰'],
-          boost:20,
-        }],
+        speechContexts: [
+          {
+            phrases: ['알토란','현성이','대인이형','대겸이형','원자','원자핵','전자','정전기','체질','전하','+전하','-전하','전위차','수증기','종이비행기','무게중심','날개','앞코','상반각','하반각','Y자','복원력','반타블랙','가시광선','음영','질감','흡수율','착시효과'],
+            boost:20,
+          },
+        ],
       },
       interimResults: true,
     };
