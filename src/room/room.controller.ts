@@ -120,9 +120,8 @@ export class RoomController {
       const gpt_roll = `You are the one who gives the O/X quiz. Make 10 O/X quizzes in Korean according to the following contents.
                    Instructions:
                    - Don't make duplicate quizzes.
-                   - following this example format strictly -> 퀴즈 1: 사자는 포유류에 속한다. 답: O.
+                   - following this example format strictly -> 퀴즈 1: 높은 고도에서는 미각이 떨어진다. 답: O.
                    - Don't use example as quiz.
-                   - When making quiz set, there should be 5 correct answers and 5 incorrect answers.
                    - Don't give extra explanation of answer.
                    - Process should be completed in 10 seconds.`;
       const { prompt } = await this.gptService.findFromDB(room_id);
