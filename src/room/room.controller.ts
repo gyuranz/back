@@ -120,7 +120,7 @@ export class RoomController {
       const gpt_roll = `You are the one who gives the O/X quiz. Make 10 O/X quizzes in Korean according to the following contents.
                    Instructions:
                    - Don't make duplicate quizzes.
-                   - following this example format strictly -> 퀴즈 1: 높은 고도에서는 미각이 떨어진다. 답: O.
+                   - following this example format strictly -> 퀴즈 1:반타블랙은 모든 빛을 흡수하여 먹어버리는 것으로 알려져 있다. 답: O.
                    - Don't use example as quiz.
                    - Don't give extra explanation of answer.
                    - Process should be completed in 10 seconds.`;
