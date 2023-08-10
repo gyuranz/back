@@ -80,8 +80,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() socket: Socket,
   ) {
     const { connUserSocketId } = data;
-
-    const initData = { connUserSocketId: socket.id };
+    const temp = SocketGateway.connectedUsers.filter((user)=>user.socketId === socket.id);
+    const initData = { connUserSocketId: socket.id, connUserNickName: temp[0].userNickname};
     socket.to(connUserSocketId).emit('conn-init', initData);
   }
 
@@ -89,7 +89,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   createNewRoomHandler(@MessageBody() data, @ConnectedSocket() socket: Socket) {
     console.log('host is creating new room');
     console.log(data);
-    const { identity, onlyAudio, sixRoomId } = data;
+    const { identity, onlyAudio, sixRoomId, userNickname } = data;
 
     const roomId = sixRoomId;
     console.log(roomId);
@@ -100,6 +100,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       socketId: socket.id,
       roomId,
       onlyAudio,
+      userNickname
     };
 
     // push that user to connectedUsers
@@ -127,7 +128,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('join-room')
   joinRoomHandler(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
-    const { identity, roomId, onlyAudio } = data;
+    const { identity, roomId, onlyAudio, userNickname } = data;
 
     const newUser = {
       identity,
@@ -135,6 +136,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       socketId: socket.id,
       roomId,
       onlyAudio,
+      userNickname,
     };
     console.log(SocketGateway.rooms);
     // join room as user which just is trying to join room passing room id
@@ -153,7 +155,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (user.socketId !== socket.id) {
         const data = {
           connUserSocketId: socket.id,
-          connUserNickname: user.user_nickname,
+          connUserNickname: user.userNickname,
         };
 
         socket.to(user.socketId).emit('conn-prepare', data);
