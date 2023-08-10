@@ -123,7 +123,7 @@ export class RoomController {
                    - following this example format strictly -> 퀴즈 1:반타블랙은 모든 빛을 흡수하여 먹어버리는 것으로 알려져 있다. 답: O.
                    - Don't use example as quiz.
                    - Don't give extra explanation of answer.
-                   - Process should be completed in 10 seconds.`;
+                   - Process should be completed in 15 seconds.`;
       const { prompt } = await this.gptService.findFromDB(room_id);
       console.log(prompt);
 
