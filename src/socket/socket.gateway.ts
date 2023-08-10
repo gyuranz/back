@@ -153,6 +153,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (user.socketId !== socket.id) {
         const data = {
           connUserSocketId: socket.id,
+          connUserNickname: user.user_nickname,
         };
 
         socket.to(user.socketId).emit('conn-prepare', data);
