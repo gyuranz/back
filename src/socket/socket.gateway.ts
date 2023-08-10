@@ -33,7 +33,7 @@ let createdRooms: string[] = [];
   },
 })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private socketService: SocketService) {}
+  constructor(private socketService: SocketService) { }
   private logger = new Logger('Twilio');
 
   static connectedUsers = [];
@@ -79,9 +79,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() data,
     @ConnectedSocket() socket: Socket,
   ) {
-    const { connUserSocketId } = data;
-    const temp = SocketGateway.connectedUsers.filter((user)=>user.socketId === socket.id);
-    const initData = { connUserSocketId: socket.id, connUserNickName: temp[0].userNickname};
+    const { connUserSocketId, connUserNickname } = data;
+    const temp = SocketGateway.connectedUsers.filter((user) => user.socketId === socket.id);
+    const initData = { connUserSocketId: socket.id, connUserNickname: temp[0].userNickname};
+    console.log(socket.id, "socketid");
+    console.log(connUserSocketId, "connuser");
     socket.to(connUserSocketId).emit('conn-init', initData);
   }
 
@@ -129,7 +131,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('join-room')
   joinRoomHandler(@MessageBody() data: any, @ConnectedSocket() socket: Socket) {
     const { identity, roomId, onlyAudio, userNickname } = data;
-
     const newUser = {
       identity,
       id: uuidv4(),
@@ -149,13 +150,13 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // add new user to connected users array
     SocketGateway.connectedUsers = [...SocketGateway.connectedUsers, newUser];
-
+    
     // emit to all users which are already in this room to prepare peer connection
     room.connectedUsers.forEach((user) => {
       if (user.socketId !== socket.id) {
         const data = {
           connUserSocketId: socket.id,
-          connUserNickname: user.userNickname,
+          connUserNickname: userNickname,
         };
 
         socket.to(user.socketId).emit('conn-prepare', data);
